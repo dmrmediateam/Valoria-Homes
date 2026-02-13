@@ -17,8 +17,8 @@ const config: Config = {
         }
       },
       fontFamily: {
-        heading: ["PT Serif", "serif"],
-        body: ["PT Serif", "serif"]
+        heading: ["Gilda Display", "serif"],
+        body: ["Gilda Display", "serif"]
       },
       boxShadow: {
         card: "0 8px 24px rgba(7, 38, 93, 0.08)"

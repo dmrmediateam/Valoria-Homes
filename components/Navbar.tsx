@@ -16,6 +16,47 @@ type NavItem = {
   subItems?: SubItem[];
 };
 
+const submenuImageSets: Record<string, string[]> = {
+  "floor-plans": [
+    "https://images.unsplash.com/photo-1605146769289-440113cc3d00?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1600047509358-9dc75507daeb?auto=format&fit=crop&w=900&q=80"
+  ],
+  "see-our-homes": [
+    "https://images.unsplash.com/photo-1600573472550-8090b5e0745e?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=900&q=80"
+  ],
+  "build-process": [
+    "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1599423300746-b62533397364?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1556912167-f556f1f39fdf?auto=format&fit=crop&w=900&q=80"
+  ],
+  about: [
+    "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=900&q=80"
+  ],
+  resources: [
+    "https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1479839672679-a46483c0e7c8?auto=format&fit=crop&w=900&q=80"
+  ]
+};
+
+const getSubmenuImage = (menuId: string, index: number) => {
+  const images = submenuImageSets[menuId];
+  if (!images?.length) {
+    return "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=900&q=80";
+  }
+  return images[index % images.length];
+};
+
 const navItems: NavItem[] = [
   {
     id: "floor-plans",
@@ -104,7 +145,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="header content-grid bg-brand-blue expand sticky top-0 z-50 border-b border-white/20 relative">
+    <header className="header content-grid relative z-50 border-b border-white/20 bg-brand-blue font-body">
       <div className="header__wrapper content-full mx-auto flex h-[112px] w-full max-w-[1720px] items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="header__logo">
           <span className="visually-hidden sr-only">Home</span>
@@ -120,45 +161,55 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <nav className="header__nav relative hidden md:block" aria-label="primary navigation">
-          <ul className="header__nav-list flex-align-center flex items-center gap-10">
+        <nav className="header__nav hidden h-full md:flex md:items-center" aria-label="primary navigation">
+          <ul className="header__nav-list flex items-center gap-10">
             {navItems.map((item) => {
               const hasSubMenu = Boolean(item.subItems?.length);
               const menuItemId = `menu-item-${item.id}`;
-              const subMenuId = `submenu-${item.id}`;
 
               return (
-                <li
-                  key={item.id}
-                  className={`header__nav-list-item ${hasSubMenu ? "has-sub-menu group relative pb-16 -mb-16" : ""}`}
-                >
+                <li key={item.id} className={`header__nav-list-item ${hasSubMenu ? "group static pb-14 -mb-14" : ""}`}>
                   <Link
-                    className="header__nav-list-link sub-menu-toggle font-body relative text-[18px] font-[400] text-white transition-colors duration-300 ease-out hover:text-brand-bronze after:absolute after:-bottom-2 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-brand-bronze after:transition-transform after:duration-300 after:ease-out after:content-[''] hover:after:scale-x-100"
+                    className="header__nav-list-link relative font-body text-[18px] font-[400] text-white transition-colors duration-300 ease-out hover:text-brand-bronze after:absolute after:-bottom-2 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-brand-bronze after:transition-transform after:duration-300 after:ease-out after:content-[''] hover:after:scale-x-100"
                     id={menuItemId}
                     href={item.href}
                     aria-haspopup={hasSubMenu ? "true" : undefined}
-                    aria-controls={hasSubMenu ? subMenuId : undefined}
-                    aria-expanded={hasSubMenu ? "false" : undefined}
+                    aria-controls={hasSubMenu ? `desktop-mega-menu-${item.id}` : undefined}
+                    aria-expanded={hasSubMenu ? false : undefined}
                   >
                     {item.label}
                   </Link>
 
                   {hasSubMenu && (
                     <div
-                      id={subMenuId}
+                      id={`desktop-mega-menu-${item.id}`}
                       aria-labelledby={menuItemId}
-                      className="header__mega-menu fixed left-0 right-0 top-[112px] z-[70] hidden border-t border-brand-blue/10 bg-white shadow-xl group-hover:block group-focus-within:block"
+                      className="header__mega-menu absolute left-0 right-0 top-full z-[70] hidden max-h-[75vh] overflow-y-auto border-t border-brand-blue/10 bg-white shadow-xl group-hover:block group-focus-within:block"
                     >
                       <div className="mx-auto w-full max-w-[1720px] px-4 py-10 sm:px-6 lg:px-8">
                         <p className="font-body text-[34px] font-[700] uppercase tracking-wide text-brand-blue">{item.label}</p>
-                        <div className="mt-8 grid grid-cols-3 gap-6">
-                          {item.subItems!.map((subItem) => (
+                        <div className="mt-8 grid content-start grid-cols-2 gap-5 lg:grid-cols-3 xl:grid-cols-4">
+                          {item.subItems!.map((subItem, index) => (
                             <Link
                               key={subItem.label}
                               href={subItem.href}
-                              className="block rounded-lg border border-slate-200 bg-white px-6 py-5 font-body text-[20px] font-[400] text-brand-body transition-colors duration-200 hover:border-brand-bronze hover:text-brand-blue"
+                              className="group/card block overflow-hidden rounded-xl border border-slate-200 bg-brand-offwhite transition duration-200 hover:border-brand-bronze hover:shadow-md"
                             >
-                              {subItem.label}
+                              <div className="relative aspect-square w-full overflow-hidden">
+                                <Image
+                                  src={getSubmenuImage(item.id, index)}
+                                  alt={`${subItem.label} preview`}
+                                  fill
+                                  sizes="(min-width: 1280px) 18vw, (min-width: 1024px) 22vw, 40vw"
+                                  className="object-cover transition-transform duration-300 group-hover/card:scale-105"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
+                              </div>
+                              <div className="px-4 py-4">
+                                <p className="font-body text-[17px] font-[400] leading-tight text-brand-body transition-colors duration-200 group-hover/card:text-brand-blue">
+                                  {subItem.label}
+                                </p>
+                              </div>
                             </Link>
                           ))}
                         </div>
@@ -171,14 +222,14 @@ export default function Navbar() {
           </ul>
         </nav>
 
-        <div className="header__cta gap-sm hidden md:block">
+        <div className="header__cta hidden md:block">
           <Link className="header__mobile-cta btn btn--primary rounded-full bg-brand-bronze px-8 py-3 font-body text-[16px] font-semibold text-brand-body" href="/get-started" aria-label="Find Your Builder">
             Find Your Builder
           </Link>
         </div>
 
         <button
-          className="header__hamburger hamburger hamburger--slider fw-700 inline-flex items-center justify-center rounded-md border border-white/40 px-3 py-2 font-body text-sm font-bold text-white md:hidden"
+          className="header__hamburger inline-flex items-center justify-center rounded-md border border-white/40 px-3 py-2 font-body text-sm font-bold text-white md:hidden"
           type="button"
           aria-controls="header__mobile-nav"
           aria-label="open mobile menu"
@@ -190,7 +241,7 @@ export default function Navbar() {
       </div>
 
       {mobileNavOpen && (
-        <div id="header__mobile-nav" className="header__mobile-nav bg-brand-blue border-t border-white/20 md:hidden">
+        <div id="header__mobile-nav" className="header__mobile-nav border-t border-white/20 bg-brand-blue md:hidden">
           <div className="header__mobile-nav-inner px-4 py-4 sm:px-6">
             <ul className="header__mobile-nav-menu space-y-1">
               {navItems.map((item) => {
@@ -202,7 +253,7 @@ export default function Navbar() {
                   <li key={item.id} className={`header__mobile-nav-item ${hasSubmenu ? "nav-item-has-dropdown" : ""}`}>
                     <div className="flex items-center justify-between gap-2">
                       <Link
-                        className="header__mobile-nav-link parent fw-500 font-body flex-1 rounded px-3 py-2 text-[15px] font-medium text-white"
+                        className="header__mobile-nav-link parent fw-500 flex-1 rounded px-3 py-2 font-body text-[15px] font-medium text-white"
                         href={item.href}
                         aria-haspopup={hasSubmenu ? "true" : undefined}
                         aria-controls={hasSubmenu ? submenuId : undefined}

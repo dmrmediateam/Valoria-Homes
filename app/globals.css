@@ -6,13 +6,21 @@
   color-scheme: light;
 }
 
+@font-face {
+  font-family: "Gilda Display";
+  src: url("/fonts/GildaDisplay-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 html,
 body {
   min-height: 100%;
 }
 
 html {
-  font-family: "PT Serif", serif;
+  font-family: "Gilda Display", serif;
 }
 
 body {
@@ -28,7 +36,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "PT Serif", serif;
+  font-family: "Gilda Display", serif;
 }
 
 button,
