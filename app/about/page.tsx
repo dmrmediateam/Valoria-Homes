@@ -1,15 +1,13 @@
-import type { Metadata } from "next";
 import CTASection from "@/components/CTASection";
+import RelatedContent from "@/components/RelatedContent";
+import SEOWrapper from "@/components/SEOWrapper";
+import { metadataFor } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "About",
-  description:
-    "Learn about Valoria Homes, a modular home builder focused on craftsmanship, reliability, and family-centered design."
-};
+export const metadata = metadataFor("/about");
 
 export default function AboutPage() {
   return (
-    <>
+    <SEOWrapper slug="/about">
       <section className="bg-brand-offwhite py-16">
         <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
           <div className="fade-in-up">
@@ -37,10 +35,16 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <section className="bg-brand-offwhite pb-6">
+        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+          <RelatedContent currentSlug="/about" />
+        </div>
+      </section>
+
       <CTASection
         title="Build with a Team You Can Trust"
         description="If you are ready to plan your next home, we are ready to help you take the next step with clarity and confidence."
       />
-    </>
+    </SEOWrapper>
   );
 }

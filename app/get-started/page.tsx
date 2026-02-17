@@ -1,13 +1,13 @@
-import type { Metadata } from "next";
 import CTASection from "@/components/CTASection";
 import FAQSection from "@/components/FAQSection";
+import RelatedContent from "@/components/RelatedContent";
+import SEOWrapper from "@/components/SEOWrapper";
 import { faqs } from "@/lib/data";
+import { metadataFor } from "@/lib/seo";
+import { buildFaqPageSchema } from "@/lib/structured-data";
 
-export const metadata: Metadata = {
-  title: "Get Started",
-  description:
-    "Get started with Valoria Homes and understand the modular homebuying process, common FAQs, and the next steps to begin your project."
-};
+export const metadata = metadataFor("/get-started");
+const faqSchema = buildFaqPageSchema("/get-started", faqs);
 
 const processOverview = [
   {
@@ -30,7 +30,7 @@ const processOverview = [
 
 export default function GetStartedPage() {
   return (
-    <>
+    <SEOWrapper slug="/get-started" extraSchemas={[faqSchema]}>
       <section className="bg-brand-offwhite py-16">
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl fade-in-up">
@@ -57,6 +57,11 @@ export default function GetStartedPage() {
       </section>
 
       <FAQSection items={faqs} />
+      <section className="bg-brand-offwhite pb-6">
+        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+          <RelatedContent currentSlug="/get-started" />
+        </div>
+      </section>
 
       <CTASection
         title="Questions About Your First Step?"
@@ -66,6 +71,6 @@ export default function GetStartedPage() {
         secondaryLabel="View Floor Plans"
         secondaryHref="/floor-plans"
       />
-    </>
+    </SEOWrapper>
   );
 }

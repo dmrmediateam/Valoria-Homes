@@ -134,6 +134,7 @@ const navItems: NavItem[] = [
 export default function Navbar() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [mobileOpenSubmenus, setMobileOpenSubmenus] = useState<Record<string, boolean>>({});
+  const [suppressDesktopMegaMenu, setSuppressDesktopMegaMenu] = useState(false);
 
   const itemsById = useMemo(() => Object.fromEntries(navItems.map((item) => [item.id, item])), []);
 
@@ -168,7 +169,11 @@ export default function Navbar() {
               const menuItemId = `menu-item-${item.id}`;
 
               return (
-                <li key={item.id} className={`header__nav-list-item ${hasSubMenu ? "group static pb-14 -mb-14" : ""}`}>
+                <li
+                  key={item.id}
+                  className={`header__nav-list-item ${hasSubMenu ? "group static pb-14 -mb-14" : ""}`}
+                  onMouseEnter={hasSubMenu ? () => setSuppressDesktopMegaMenu(false) : undefined}
+                >
                   <Link
                     className="header__nav-list-link relative font-body text-[18px] font-[400] text-white transition-colors duration-300 ease-out hover:text-brand-bronze after:absolute after:-bottom-2 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-brand-bronze after:transition-transform after:duration-300 after:ease-out after:content-[''] hover:after:scale-x-100"
                     id={menuItemId}
@@ -184,29 +189,31 @@ export default function Navbar() {
                     <div
                       id={`desktop-mega-menu-${item.id}`}
                       aria-labelledby={menuItemId}
-                      className="header__mega-menu absolute left-0 right-0 top-full z-[70] hidden max-h-[75vh] overflow-y-auto border-t border-brand-blue/10 bg-white shadow-xl group-hover:block group-focus-within:block"
+                      className="header__mega-menu absolute left-0 right-0 top-full z-[70] hidden border-t border-brand-blue/10 bg-white shadow-xl group-hover:block group-focus-within:block"
+                      style={suppressDesktopMegaMenu ? { display: "none" } : undefined}
                     >
-                      <div className="mx-auto w-full max-w-[1720px] px-4 py-10 sm:px-6 lg:px-8">
-                        <p className="font-body text-[34px] font-[700] uppercase tracking-wide text-brand-blue">{item.label}</p>
-                        <div className="mt-8 grid content-start grid-cols-2 gap-5 lg:grid-cols-3 xl:grid-cols-4">
+                      <div className="mx-auto w-full max-w-[1720px] px-4 py-6 sm:px-6 lg:px-8">
+                        <p className="font-body text-[28px] font-[700] uppercase tracking-wide text-brand-blue">{item.label}</p>
+                        <div className="mt-5 grid content-start grid-cols-3 gap-4 lg:grid-cols-4 xl:grid-cols-5">
                           {item.subItems!.map((subItem, index) => (
                             <Link
                               key={subItem.label}
                               href={subItem.href}
-                              className="group/card block overflow-hidden rounded-xl border border-slate-200 bg-brand-offwhite transition duration-200 hover:border-brand-bronze hover:shadow-md"
+                              className="group/card block overflow-hidden rounded-lg border border-slate-200 bg-brand-offwhite transition duration-200 hover:border-brand-bronze hover:shadow-md"
+                              onClick={() => setSuppressDesktopMegaMenu(true)}
                             >
-                              <div className="relative aspect-square w-full overflow-hidden">
+                              <div className="relative aspect-[4/3] w-full overflow-hidden">
                                 <Image
                                   src={getSubmenuImage(item.id, index)}
                                   alt={`${subItem.label} preview`}
                                   fill
-                                  sizes="(min-width: 1280px) 18vw, (min-width: 1024px) 22vw, 40vw"
+                                  sizes="(min-width: 1280px) 16vw, (min-width: 1024px) 19vw, 26vw"
                                   className="object-cover transition-transform duration-300 group-hover/card:scale-105"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
                               </div>
-                              <div className="px-4 py-4">
-                                <p className="font-body text-[17px] font-[400] leading-tight text-brand-body transition-colors duration-200 group-hover/card:text-brand-blue">
+                              <div className="px-3 py-2.5">
+                                <p className="font-body text-[15px] font-[400] leading-tight text-brand-body transition-colors duration-200 group-hover/card:text-brand-blue">
                                   {subItem.label}
                                 </p>
                               </div>

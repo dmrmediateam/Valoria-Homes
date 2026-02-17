@@ -37,10 +37,10 @@ export default function FloorPlanCard({ plan }: FloorPlanCardProps) {
           </p>
         </div>
         <Link
-          href="/contact"
+          href={`/floor-plans/${plan.id}`}
           className="mt-6 inline-block rounded-md bg-brand-bronze px-4 py-2 text-sm font-semibold text-white transition hover:brightness-95"
         >
-          View Details
+          View Plan Details
         </Link>
       </div>
     </article>

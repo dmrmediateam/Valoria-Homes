@@ -1,13 +1,13 @@
 import type { MetadataRoute } from "next";
+import { contentRegistry } from "@/lib/content-registry";
 
 const baseUrl = "https://www.valoriahomes.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const routes = ["", "/floor-plans", "/build-process", "/get-started", "/about", "/contact"];
-
-  return routes.map((route) => ({
-    url: `${baseUrl}${route}`,
-    changeFrequency: "weekly",
-    priority: route === "" ? 1 : 0.8
+  return contentRegistry.map((entry) => ({
+    url: `${baseUrl}${entry.slug}`,
+    lastModified: new Date(entry.modifiedDate),
+    changeFrequency: entry.changeFrequency,
+    priority: entry.priority
   }));
 }

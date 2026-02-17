@@ -1,17 +1,15 @@
-import type { Metadata } from "next";
 import CTASection from "@/components/CTASection";
 import FloorPlanGrid from "@/components/FloorPlanGrid";
+import RelatedContent from "@/components/RelatedContent";
+import SEOWrapper from "@/components/SEOWrapper";
 import { floorPlans } from "@/lib/data";
+import { metadataFor } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Floor Plans",
-  description:
-    "Browse Valoria Homes floor plans with practical layouts, quality construction, and family-focused designs built for Midwest living."
-};
+export const metadata = metadataFor("/floor-plans");
 
 export default function FloorPlansPage() {
   return (
-    <>
+    <SEOWrapper slug="/floor-plans">
       <section className="bg-brand-offwhite py-16">
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl fade-in-up">
@@ -29,10 +27,16 @@ export default function FloorPlansPage() {
         </div>
       </section>
 
+      <section className="bg-brand-offwhite pb-6">
+        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+          <RelatedContent currentSlug="/floor-plans" />
+        </div>
+      </section>
+
       <CTASection
         title="Need Help Choosing a Plan?"
         description="Our team can help you compare layouts, budget priorities, and site requirements to pick the right plan with confidence."
       />
-    </>
+    </SEOWrapper>
   );
 }

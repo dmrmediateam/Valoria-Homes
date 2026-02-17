@@ -1,17 +1,15 @@
-import type { Metadata } from "next";
 import CTASection from "@/components/CTASection";
 import BuildProcessSection from "@/components/BuildProcessSection";
+import RelatedContent from "@/components/RelatedContent";
+import SEOWrapper from "@/components/SEOWrapper";
 import { buildSteps } from "@/lib/data";
+import { metadataFor } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Build Process",
-  description:
-    "Learn how Valoria Homes guides your project from consultation to move-in with a clear, proven modular home building process."
-};
+export const metadata = metadataFor("/build-process");
 
 export default function BuildProcessPage() {
   return (
-    <>
+    <SEOWrapper slug="/build-process">
       <section className="bg-brand-offwhite py-16">
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl fade-in-up">
@@ -26,11 +24,16 @@ export default function BuildProcessPage() {
       </section>
 
       <BuildProcessSection steps={buildSteps} />
+      <section className="bg-brand-offwhite pb-6">
+        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+          <RelatedContent currentSlug="/build-process" />
+        </div>
+      </section>
 
       <CTASection
         title="Start Your Build with a Trusted Team"
         description="Schedule your consultation and we will walk through your goals, timeline, and the best next steps for your project."
       />
-    </>
+    </SEOWrapper>
   );
 }

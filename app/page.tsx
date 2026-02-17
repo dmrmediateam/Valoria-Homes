@@ -1,19 +1,19 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import BuildProcessSection from "@/components/BuildProcessSection";
 import CTASection from "@/components/CTASection";
+import RelatedContent from "@/components/RelatedContent";
+import RevealOnScroll from "@/components/RevealOnScroll";
+import SEOWrapper from "@/components/SEOWrapper";
 import { buildSteps, floorPlans } from "@/lib/data";
+import { floorPlanStyles } from "@/lib/floor-plan-styles";
+import { metadataFor } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Valoria Homes | Quality Modular Homes Built to Last",
-  description:
-    "Valoria Homes builds durable, high-quality modular homes designed for Midwestern families. View floor plans and start building today."
-};
+export const metadata = metadataFor("/");
 
 export default function HomePage() {
   return (
-    <>
+    <SEOWrapper slug="/">
       <section className="relative w-full overflow-hidden">
         <div className="absolute inset-0 h-full w-full">
           <video
@@ -60,7 +60,7 @@ export default function HomePage() {
       <section className="bg-brand-offwhite py-14 lg:py-20">
         <div className="mx-auto w-full max-w-[1720px] px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
-            <div className="fade-in-up">
+            <RevealOnScroll from="left">
               <h2 className="max-w-[640px] text-4xl font-black leading-[1.15] text-brand-body sm:text-5xl lg:text-[64px] lg:leading-[1.05]">
                 Build the Custom Home of Your Dreams
               </h2>
@@ -78,37 +78,30 @@ export default function HomePage() {
               >
                 Explore Floor Plans
               </Link>
-            </div>
+            </RevealOnScroll>
 
-            <div className="relative overflow-hidden rounded-2xl bg-white shadow-card fade-in-up">
+            <RevealOnScroll from="right" delayMs={120} className="relative overflow-hidden rounded-2xl bg-white shadow-card">
               <div className="relative h-[420px] sm:h-[520px] lg:h-[760px]">
                 <Image
-                  src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2200&q=80"
+                  src="/images/modernresidence.jpg"
                   alt="Modern custom modular home exterior"
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 60vw"
                 />
               </div>
-
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="rounded-2xl bg-black/60 px-14 py-10 text-center text-white backdrop-blur-[1px]">
-                  <div className="mx-auto inline-flex h-24 w-24 items-center justify-center rounded-full border-4 border-white">
-                    <svg viewBox="0 0 24 24" className="h-8 w-8 fill-white" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </div>
-                  <p className="mt-4 text-[38px] font-medium">Play Our Process Video</p>
-                </div>
-              </div>
-            </div>
+            </RevealOnScroll>
           </div>
 
           <div className="mt-14 grid grid-cols-2 gap-6 text-center sm:grid-cols-3 lg:grid-cols-6">
-            {["Cape Cod", "Chalet", "Colonial", "Cottage", "Duplex", "Ranch"].map((style) => (
-              <p key={style} className="text-[26px] font-medium text-[#8B5E25]">
-                {style}
-              </p>
+            {floorPlanStyles.map((style) => (
+              <Link
+                key={style.slug}
+                href={`/floor-plans/styles/${style.slug}`}
+                className="text-[26px] font-medium text-[#8B5E25] transition hover:text-brand-blue"
+              >
+                {style.title}
+              </Link>
             ))}
           </div>
         </div>
@@ -136,7 +129,7 @@ export default function HomePage() {
                   <h3 className="text-3xl font-black text-brand-blue">{plan.name}</h3>
                   <p className="mt-3 text-base text-brand-body">{plan.beds} Beds • {plan.baths} Baths • {plan.sqFt} Sq Ft</p>
                   <Link
-                    href="/floor-plans"
+                    href={`/floor-plans/${plan.id}`}
                     className="mt-5 inline-block rounded-full bg-brand-bronze px-5 py-2.5 text-sm font-semibold text-brand-body transition hover:brightness-95"
                   >
                     View Plan
@@ -149,6 +142,11 @@ export default function HomePage() {
       </section>
 
       <BuildProcessSection steps={buildSteps} />
+      <section className="bg-brand-offwhite pb-6">
+        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+          <RelatedContent currentSlug="/" />
+        </div>
+      </section>
 
       <CTASection
         title="Ready to Build with Valoria?"
@@ -158,6 +156,6 @@ export default function HomePage() {
         secondaryLabel="Contact Us"
         secondaryHref="/contact"
       />
-    </>
+    </SEOWrapper>
   );
 }
