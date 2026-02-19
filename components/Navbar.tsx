@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { floorPlanStyles } from "@/lib/floor-plan-styles";
 
 type SubItem = {
   href: string;
@@ -57,22 +58,20 @@ const getSubmenuImage = (menuId: string, index: number) => {
   return images[index % images.length];
 };
 
+const floorPlanSubItems: SubItem[] = [
+  { href: "/floor-plans", label: "All Floor Plans" },
+  ...floorPlanStyles.map((style) => ({
+    href: `/floor-plans/${style.slug}`,
+    label: style.title
+  }))
+];
+
 const navItems: NavItem[] = [
   {
     id: "floor-plans",
     href: "/floor-plans",
     label: "Floor Plans",
-    subItems: [
-      { href: "/floor-plans", label: "All Floor Plans" },
-      { href: "/floor-plans", label: "Starter Series" },
-      { href: "/floor-plans", label: "Single Section" },
-      { href: "/floor-plans", label: "Cape Cod" },
-      { href: "/floor-plans", label: "Chalet" },
-      { href: "/floor-plans", label: "Colonial" },
-      { href: "/floor-plans", label: "Cottage" },
-      { href: "/floor-plans", label: "Duplex" },
-      { href: "/floor-plans", label: "Ranch" }
-    ]
+    subItems: floorPlanSubItems
   },
   {
     id: "see-our-homes",
@@ -104,9 +103,6 @@ const navItems: NavItem[] = [
     href: "/about",
     label: "About",
     subItems: [
-      { href: "/about", label: "Become a Builder" },
-      { href: "/about", label: "Careers" },
-      { href: "/about", label: "History" },
       { href: "/about", label: "Our Philosophy" },
       { href: "/about", label: "Our Team" },
       { href: "/about", label: "Valoria Homes Reviews" }
@@ -117,10 +113,8 @@ const navItems: NavItem[] = [
     href: "/get-started",
     label: "Resources",
     subItems: [
-      { href: "/get-started", label: "Color Visualizer" },
-      { href: "/get-started", label: "Events" },
-      { href: "/get-started", label: "FAQs" },
-      { href: "/get-started", label: "Home Design Center" },
+      { href: "/get-started", label: "Blogs" },
+      { href: "/get-started", label: "FAQ" },
       { href: "/get-started", label: "Mortgage Calculator" }
     ]
   },
@@ -230,7 +224,7 @@ export default function Navbar() {
         </nav>
 
         <div className="header__cta hidden md:block">
-          <Link className="header__mobile-cta btn btn--primary rounded-full bg-brand-bronze px-8 py-3 font-body text-[16px] font-semibold text-brand-body" href="/get-started" aria-label="Find Your Builder">
+          <Link className="header__mobile-cta btn btn--primary rounded-md bg-brand-bronze px-8 py-3 font-body text-[16px] font-semibold text-brand-body" href="/get-started" aria-label="Find Your Builder">
             Find Your Builder
           </Link>
         </div>
@@ -305,7 +299,7 @@ export default function Navbar() {
             </ul>
 
             <div className="header__mobile-cta margin-inline-auto mt-4 text-center">
-              <Link className="btn btn--primary inline-flex rounded-full bg-brand-bronze px-7 py-3 font-semibold text-brand-body" href="/get-started" aria-label="Find Your Builder" onClick={() => setMobileNavOpen(false)}>
+              <Link className="btn btn--primary inline-flex rounded-md bg-brand-bronze px-7 py-3 font-semibold text-brand-body" href="/get-started" aria-label="Find Your Builder" onClick={() => setMobileNavOpen(false)}>
                 Find Your Builder
               </Link>
             </div>

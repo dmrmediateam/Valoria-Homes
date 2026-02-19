@@ -1,5 +1,5 @@
 import { getContentEntry } from "@/lib/content-registry";
-import type { FAQItem, FloorPlan } from "@/lib/data";
+import { buildFloorPlanHref, type FAQItem, type FloorPlan } from "@/lib/data";
 
 export type JsonLd = Record<string, unknown>;
 
@@ -143,7 +143,7 @@ export function buildContactPageSchema(slug: string): JsonLd {
 }
 
 export function buildFloorPlanProductSchema(plan: FloorPlan): JsonLd {
-  const slug = `/floor-plans/${plan.id}`;
+  const slug = buildFloorPlanHref(plan);
 
   return {
     "@context": "https://schema.org",

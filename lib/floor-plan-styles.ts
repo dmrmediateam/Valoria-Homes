@@ -6,6 +6,18 @@ export type FloorPlanStyle = {
 
 export const floorPlanStyles: FloorPlanStyle[] = [
   {
+    slug: "starter-series",
+    title: "Starter Series",
+    description:
+      "Explore Starter Series modular home plans designed for first-time buyers and growing households focused on long-term value."
+  },
+  {
+    slug: "single-section",
+    title: "Single Section",
+    description:
+      "Explore Single Section modular home plans with efficient footprints, smart layouts, and dependable everyday functionality."
+  },
+  {
     slug: "cape-cod",
     title: "Cape Cod",
     description:

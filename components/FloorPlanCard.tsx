@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import type { FloorPlan } from "@/lib/data";
+import { buildFloorPlanHref, type FloorPlan } from "@/lib/data";
 
 type FloorPlanCardProps = {
   plan: FloorPlan;
@@ -37,7 +37,7 @@ export default function FloorPlanCard({ plan }: FloorPlanCardProps) {
           </p>
         </div>
         <Link
-          href={`/floor-plans/${plan.id}`}
+          href={buildFloorPlanHref(plan)}
           className="mt-6 inline-block rounded-md bg-brand-bronze px-4 py-2 text-sm font-semibold text-white transition hover:brightness-95"
         >
           View Plan Details

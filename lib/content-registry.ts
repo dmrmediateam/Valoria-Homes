@@ -1,5 +1,5 @@
-import { floorPlans } from "@/lib/data";
-import { floorPlanStyles } from "@/lib/floor-plan-styles";
+import { buildFloorPlanHref, floorPlans } from "@/lib/data";
+import { floorPlanStyles, getFloorPlanStyleBySlug } from "@/lib/floor-plan-styles";
 
 export type ChangeFrequency = "daily" | "weekly" | "monthly";
 
@@ -98,20 +98,26 @@ const baseContentRegistry: ContentEntry[] = [
 ];
 
 const floorPlanContentRegistry: ContentEntry[] = floorPlans.map((plan) => ({
-  slug: `/floor-plans/${plan.id}`,
+  slug: buildFloorPlanHref(plan),
   title: `${plan.name} Floor Plan`,
   description: `${plan.description} ${plan.beds} beds, ${plan.baths} baths, ${plan.sqFt} sq ft modular design.`,
   publishDate: "2026-02-11",
   modifiedDate: "2026-02-16",
   category: "Floor Plans",
-  tags: ["Floor Plans", "Modular Homes", `${plan.beds} Bedroom`, `${plan.sqFt} Sq Ft`],
+  tags: [
+    "Floor Plans",
+    "Modular Homes",
+    `${plan.beds} Bedroom`,
+    `${plan.sqFt} Sq Ft`,
+    getFloorPlanStyleBySlug(plan.styleSlug)?.title ?? "Style"
+  ],
   author: "Valoria Homes",
   priority: 0.7,
   changeFrequency: "weekly"
 }));
 
 const floorPlanStyleContentRegistry: ContentEntry[] = floorPlanStyles.map((style) => ({
-  slug: `/floor-plans/styles/${style.slug}`,
+  slug: `/floor-plans/${style.slug}` as `/${string}`,
   title: `${style.title} Floor Plans`,
   description: style.description,
   publishDate: "2026-02-11",

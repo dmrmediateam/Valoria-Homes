@@ -1,6 +1,7 @@
 export type FloorPlan = {
   id: string;
   name: string;
+  styleSlug: string;
   beds: number;
   baths: number;
   sqFt: number;
@@ -24,6 +25,7 @@ export const floorPlans: FloorPlan[] = [
   {
     id: "meadowbrook-2140",
     name: "Meadowbrook 2140",
+    styleSlug: "ranch",
     beds: 3,
     baths: 2,
     sqFt: 2140,
@@ -35,6 +37,7 @@ export const floorPlans: FloorPlan[] = [
   {
     id: "pine-ridge-1885",
     name: "Pine Ridge 1885",
+    styleSlug: "single-section",
     beds: 3,
     baths: 2,
     sqFt: 1885,
@@ -46,6 +49,7 @@ export const floorPlans: FloorPlan[] = [
   {
     id: "heritage-2420",
     name: "Heritage 2420",
+    styleSlug: "colonial",
     beds: 4,
     baths: 2.5,
     sqFt: 2420,
@@ -57,6 +61,7 @@ export const floorPlans: FloorPlan[] = [
   {
     id: "oakview-2010",
     name: "Oakview 2010",
+    styleSlug: "starter-series",
     beds: 3,
     baths: 2,
     sqFt: 2010,
@@ -68,6 +73,7 @@ export const floorPlans: FloorPlan[] = [
   {
     id: "prairie-classic-1760",
     name: "Prairie Classic 1760",
+    styleSlug: "cottage",
     beds: 3,
     baths: 2,
     sqFt: 1760,
@@ -79,6 +85,7 @@ export const floorPlans: FloorPlan[] = [
   {
     id: "timberline-2285",
     name: "Timberline 2285",
+    styleSlug: "chalet",
     beds: 4,
     baths: 3,
     sqFt: 2285,
@@ -149,3 +156,15 @@ export const faqs: FAQItem[] = [
       "We can connect you with trusted lending and site-work partners to support a smooth, coordinated project from start to finish."
   }
 ];
+
+export function buildFloorPlanHref(plan: FloorPlan): `/${string}` {
+  return `/floor-plans/${plan.styleSlug}/${plan.id}` as `/${string}`;
+}
+
+export function getFloorPlansByStyleSlug(styleSlug: string): FloorPlan[] {
+  return floorPlans.filter((plan) => plan.styleSlug === styleSlug);
+}
+
+export function getFloorPlanByStyleAndId(styleSlug: string, planId: string): FloorPlan | undefined {
+  return floorPlans.find((plan) => plan.styleSlug === styleSlug && plan.id === planId);
+}

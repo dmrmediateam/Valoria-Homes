@@ -2,16 +2,29 @@ import Image from "next/image";
 import Link from "next/link";
 import BuildProcessSection from "@/components/BuildProcessSection";
 import CTASection from "@/components/CTASection";
+import FloorPlanTypeShowcase from "@/components/FloorPlanTypeShowcase";
 import RelatedContent from "@/components/RelatedContent";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import SEOWrapper from "@/components/SEOWrapper";
-import { buildSteps, floorPlans } from "@/lib/data";
+import { buildFloorPlanHref, buildSteps, floorPlans } from "@/lib/data";
 import { floorPlanStyles } from "@/lib/floor-plan-styles";
 import { metadataFor } from "@/lib/seo";
 
 export const metadata = metadataFor("/");
 
 export default function HomePage() {
+  const floorPlanTypeShowcaseItems = floorPlanStyles.map((style) => {
+    const plansByStyle = floorPlans.filter((plan) => plan.styleSlug === style.slug);
+
+    return {
+      slug: style.slug,
+      title: style.title,
+      description: style.description,
+      planCount: plansByStyle.length,
+      previewImage: plansByStyle[0]?.image ?? "/images/modernresidence.jpg"
+    };
+  });
+
   return (
     <SEOWrapper slug="/">
       <section className="relative w-full overflow-hidden">
@@ -59,29 +72,29 @@ export default function HomePage() {
 
       <section className="bg-brand-offwhite py-14 lg:py-20">
         <div className="mx-auto w-full max-w-[1720px] px-4 sm:px-6 lg:px-8">
-          <div className="grid items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="grid items-center gap-8 lg:grid-cols-[1fr_0.9fr] lg:gap-10">
             <RevealOnScroll from="left">
-              <h2 className="max-w-[640px] text-4xl font-black leading-[1.15] text-brand-body sm:text-5xl lg:text-[64px] lg:leading-[1.05]">
+              <h2 className="max-w-[560px] text-3xl font-black leading-[1.18] text-brand-body sm:text-4xl lg:text-5xl">
                 Build the Custom Home of Your Dreams
               </h2>
-              <p className="mt-8 max-w-[760px] text-xl leading-relaxed text-brand-body">
+              <p className="mt-6 max-w-[700px] text-base leading-relaxed text-brand-body sm:text-lg">
                 Building a modular home should not be stressful. That is why we make the process easy. Everything we do
                 comes back to three values: <span className="font-bold">quality craftsmanship, structural strength, and lasting value.</span>
               </p>
-              <p className="mt-7 max-w-[760px] text-xl leading-relaxed text-brand-body">
+              <p className="mt-5 max-w-[700px] text-base leading-relaxed text-brand-body sm:text-lg">
                 Start by exploring our customizable floor plans. From there, we will connect you with one of our trusted
                 builders across the Midwest we proudly serve. Together, we will build your dream home.
               </p>
               <Link
                 href="/floor-plans"
-                className="mt-10 inline-flex rounded-full bg-brand-bronze px-7 py-3 text-[24px] font-semibold text-brand-body transition hover:brightness-95"
+                className="mt-8 inline-flex rounded-md bg-brand-bronze px-6 py-2.5 text-lg font-semibold text-brand-body transition hover:brightness-95"
               >
                 Explore Floor Plans
               </Link>
             </RevealOnScroll>
 
             <RevealOnScroll from="right" delayMs={120} className="relative overflow-hidden rounded-2xl bg-white shadow-card">
-              <div className="relative h-[420px] sm:h-[520px] lg:h-[760px]">
+              <div className="relative h-[320px] sm:h-[400px] lg:h-[520px]">
                 <Image
                   src="/images/modernresidence.jpg"
                   alt="Modern custom modular home exterior"
@@ -93,17 +106,7 @@ export default function HomePage() {
             </RevealOnScroll>
           </div>
 
-          <div className="mt-14 grid grid-cols-2 gap-6 text-center sm:grid-cols-3 lg:grid-cols-6">
-            {floorPlanStyles.map((style) => (
-              <Link
-                key={style.slug}
-                href={`/floor-plans/styles/${style.slug}`}
-                className="text-[26px] font-medium text-[#8B5E25] transition hover:text-brand-blue"
-              >
-                {style.title}
-              </Link>
-            ))}
-          </div>
+          <FloorPlanTypeShowcase styles={floorPlanTypeShowcaseItems} />
         </div>
       </section>
 
@@ -129,8 +132,8 @@ export default function HomePage() {
                   <h3 className="text-3xl font-black text-brand-blue">{plan.name}</h3>
                   <p className="mt-3 text-base text-brand-body">{plan.beds} Beds • {plan.baths} Baths • {plan.sqFt} Sq Ft</p>
                   <Link
-                    href={`/floor-plans/${plan.id}`}
-                    className="mt-5 inline-block rounded-full bg-brand-bronze px-5 py-2.5 text-sm font-semibold text-brand-body transition hover:brightness-95"
+                    href={buildFloorPlanHref(plan)}
+                    className="mt-5 inline-block rounded-md bg-brand-bronze px-5 py-2.5 text-sm font-semibold text-brand-body transition hover:brightness-95"
                   >
                     View Plan
                   </Link>
