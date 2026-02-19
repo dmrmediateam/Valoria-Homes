@@ -83,6 +83,19 @@ const baseContentRegistry: ContentEntry[] = [
     changeFrequency: "monthly"
   },
   {
+    slug: "/blogs",
+    title: "Blog",
+    description:
+      "Insights and updates on modular homes, building tips, and the Valoria Homes community.",
+    publishDate: "2026-02-11",
+    modifiedDate: "2026-02-16",
+    category: "Resources",
+    tags: ["Blog", "Modular Homes", "Building Tips"],
+    author: "Valoria Homes",
+    priority: 0.7,
+    changeFrequency: "weekly"
+  },
+  {
     slug: "/contact",
     title: "Contact",
     description:

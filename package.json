@@ -10,17 +10,24 @@
     "build": "next build",
     "start": "next start",
     "lint": "tsc --noEmit",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "seed:blogs": "npx tsx scripts/seed-blogs.ts",
+    "studio:deploy": "sanity deploy",
+    "studio:undeploy": "sanity undeploy"
   },
   "dependencies": {
+    "@portabletext/react": "^6.0.2",
     "next": "^16.1.6",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "next-sanity": "^12.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "sanity": "^5.11.0",
+    "styled-components": "^6.3.11"
   },
   "devDependencies": {
     "@types/node": "^20.17.6",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.16",

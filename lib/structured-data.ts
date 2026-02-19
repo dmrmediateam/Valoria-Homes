@@ -24,6 +24,9 @@ function breadcrumbName(path: string): string {
   if (path === "/") {
     return "Home";
   }
+  if (path === "/blogs") {
+    return "Blog";
+  }
 
   const entry = getContentEntry(path);
   if (entry) {
@@ -139,6 +142,31 @@ export function buildContactPageSchema(slug: string): JsonLd {
       email: contactEmail,
       telephone: contactPhone
     }
+  };
+}
+
+export function buildArticleSchema(options: {
+  title: string;
+  slug: string;
+  description?: string;
+  publishedAt: string;
+  image?: string;
+  author?: string;
+}): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: options.title,
+    datePublished: options.publishedAt,
+    description: options.description,
+    url: options.slug.startsWith("http") ? options.slug : `${baseUrl}${options.slug}`,
+    image: options.image,
+    author: options.author
+      ? {
+          "@type": "Person",
+          name: options.author
+        }
+      : { "@type": "Organization", name: siteName }
   };
 }
 

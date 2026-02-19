@@ -113,7 +113,7 @@ const navItems: NavItem[] = [
     href: "/get-started",
     label: "Resources",
     subItems: [
-      { href: "/get-started", label: "Blogs" },
+      { href: "/blogs", label: "Blogs" },
       { href: "/get-started", label: "FAQ" },
       { href: "/get-started", label: "Mortgage Calculator" }
     ]
