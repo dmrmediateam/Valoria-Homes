@@ -7,12 +7,14 @@ import FloorPlanGrid from "@/components/FloorPlanGrid";
 import RelatedContent from "@/components/RelatedContent";
 import SEOWrapper from "@/components/SEOWrapper";
 import {
-  buildFloorPlanHref,
-  floorPlans,
-  getFloorPlanByStyleAndId,
-  getFloorPlansByStyleSlug
+  buildFloorPlanHref
 } from "@/lib/data";
-import { floorPlanStyles, getFloorPlanStyleBySlug } from "@/lib/floor-plan-styles";
+import {
+  getFloorPlanByStyleAndIdSource,
+  getFloorPlansByStyleSlugSource,
+  getFloorPlansSource,
+  getFloorPlanStylesSource
+} from "@/lib/floor-plan-source";
 import { metadataFor } from "@/lib/seo";
 import { buildFloorPlanProductSchema } from "@/lib/structured-data";
 
@@ -22,7 +24,12 @@ type FloorPlanDynamicPageProps = {
   }>;
 };
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const [floorPlanStyles, floorPlans] = await Promise.all([
+    getFloorPlanStylesSource(),
+    getFloorPlansSource()
+  ]);
+
   const styleParams = floorPlanStyles.map((style) => ({
     slug: [style.slug]
   }));
@@ -36,9 +43,10 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: FloorPlanDynamicPageProps): Promise<Metadata> {
   const { slug } = await params;
+  const floorPlanStyles = await getFloorPlanStylesSource();
 
   if (slug.length === 1) {
-    const style = getFloorPlanStyleBySlug(slug[0]);
+    const style = floorPlanStyles.find((entry) => entry.slug === slug[0]);
     if (!style) {
       return {};
     }
@@ -57,7 +65,7 @@ export async function generateMetadata({ params }: FloorPlanDynamicPageProps): P
 
   if (slug.length === 2) {
     const [styleSlug, planId] = slug;
-    const plan = getFloorPlanByStyleAndId(styleSlug, planId);
+    const plan = await getFloorPlanByStyleAndIdSource(styleSlug, planId);
     if (!plan) {
       return {};
     }
@@ -79,16 +87,17 @@ export async function generateMetadata({ params }: FloorPlanDynamicPageProps): P
 
 export default async function FloorPlanDynamicPage({ params }: FloorPlanDynamicPageProps) {
   const { slug } = await params;
+  const floorPlanStyles = await getFloorPlanStylesSource();
 
   if (slug.length === 1) {
-    const style = getFloorPlanStyleBySlug(slug[0]);
+    const style = floorPlanStyles.find((entry) => entry.slug === slug[0]);
 
     if (!style) {
       notFound();
     }
 
     const pageSlug = `/floor-plans/${style.slug}`;
-    const plans = getFloorPlansByStyleSlug(style.slug);
+    const plans = await getFloorPlansByStyleSlugSource(style.slug);
 
     return (
       <SEOWrapper slug={pageSlug}>
@@ -125,8 +134,8 @@ export default async function FloorPlanDynamicPage({ params }: FloorPlanDynamicP
 
   if (slug.length === 2) {
     const [styleSlug, planId] = slug;
-    const style = getFloorPlanStyleBySlug(styleSlug);
-    const plan = getFloorPlanByStyleAndId(styleSlug, planId);
+    const style = floorPlanStyles.find((entry) => entry.slug === styleSlug);
+    const plan = await getFloorPlanByStyleAndIdSource(styleSlug, planId);
 
     if (!style || !plan) {
       notFound();

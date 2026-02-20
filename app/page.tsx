@@ -6,13 +6,15 @@ import FloorPlanTypeShowcase from "@/components/FloorPlanTypeShowcase";
 import RelatedContent from "@/components/RelatedContent";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import SEOWrapper from "@/components/SEOWrapper";
-import { buildFloorPlanHref, buildSteps, floorPlans } from "@/lib/data";
-import { floorPlanStyles } from "@/lib/floor-plan-styles";
+import { buildFloorPlanHref, buildSteps } from "@/lib/data";
+import { getFloorPlansSource, getFloorPlanStylesSource } from "@/lib/floor-plan-source";
 import { metadataFor } from "@/lib/seo";
 
 export const metadata = metadataFor("/");
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [floorPlanStyles, floorPlans] = await Promise.all([getFloorPlanStylesSource(), getFloorPlansSource()]);
+
   const floorPlanTypeShowcaseItems = floorPlanStyles.map((style) => {
     const plansByStyle = floorPlans.filter((plan) => plan.styleSlug === style.slug);
 

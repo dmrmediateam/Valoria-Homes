@@ -43,3 +43,23 @@ export const postBySlugQuery = `*[_type == "post" && slug.current == $slug][0] {
 }`;
 
 export const postSlugsQuery = `*[_type == "post" && defined(slug.current)]{ "slug": slug.current }`;
+
+export const floorPlanStylesQuery = `*[_type == "floorPlanStyle" && defined(slug.current)] | order(coalesce(sortOrder, 9999) asc, title asc) {
+  _id,
+  title,
+  "slug": slug.current,
+  description,
+  "previewImage": previewImage.asset->url
+}`;
+
+export const floorPlansQuery = `*[_type == "floorPlan" && defined(slug.current) && defined(style->slug.current)] | order(coalesce(sortOrder, 9999) asc, name asc) {
+  _id,
+  name,
+  "id": slug.current,
+  "styleSlug": style->slug.current,
+  beds,
+  baths,
+  sqFt,
+  description,
+  "image": mainImage.asset->url
+}`;

@@ -2,13 +2,14 @@ import Link from "next/link";
 import CTASection from "@/components/CTASection";
 import RelatedContent from "@/components/RelatedContent";
 import SEOWrapper from "@/components/SEOWrapper";
-import { getFloorPlansByStyleSlug } from "@/lib/data";
-import { floorPlanStyles } from "@/lib/floor-plan-styles";
+import { getFloorPlansSource, getFloorPlanStylesSource } from "@/lib/floor-plan-source";
 import { metadataFor } from "@/lib/seo";
 
 export const metadata = metadataFor("/floor-plans");
 
-export default function FloorPlansPage() {
+export default async function FloorPlansPage() {
+  const [floorPlanStyles, floorPlans] = await Promise.all([getFloorPlanStylesSource(), getFloorPlansSource()]);
+
   return (
     <SEOWrapper slug="/floor-plans">
       <section className="bg-brand-offwhite py-16">
@@ -23,7 +24,7 @@ export default function FloorPlansPage() {
 
           <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {floorPlanStyles.map((style) => {
-              const planCount = getFloorPlansByStyleSlug(style.slug).length;
+              const planCount = floorPlans.filter((plan) => plan.styleSlug === style.slug).length;
 
               return (
                 <article key={style.slug} className="rounded-lg border border-slate-200 bg-white p-6 shadow-card fade-in-up">
