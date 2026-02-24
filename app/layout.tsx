@@ -21,6 +21,15 @@ export const metadata: Metadata = {
     template: "%s | Valoria Homes"
   },
   description: defaultDescription,
+  icons: {
+    icon: [
+      { url: "/icon.png", type: "image/png" },
+      { url: "/favicon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/favicon-512x512.png", sizes: "512x512", type: "image/png" }
+    ],
+    shortcut: ["/icon.png"],
+    apple: [{ url: "/icon.png", type: "image/png" }]
+  },
   openGraph: {
     title: defaultTitle,
     description: defaultDescription,
