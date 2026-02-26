@@ -117,7 +117,7 @@ export default async function HomePage() {
           <div className="flex flex-wrap items-end justify-between gap-4 fade-in-up">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-bronze">Floor Plans</p>
-              <h2 className="mt-2 font-heading text-4xl font-black text-brand-blue sm:text-5xl">See Our Homes</h2>
+              <h2 className="mt-2 font-heading text-4xl font-black text-brand-blue sm:text-5xl">Our Homes</h2>
             </div>
             <Link href="/floor-plans" className="text-base font-semibold text-brand-blue hover:text-brand-bronze">
               Browse all models

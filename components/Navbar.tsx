@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { floorPlanStyles } from "@/lib/floor-plan-styles";
 
 type SubItem = {
@@ -24,7 +25,7 @@ const submenuImageSets: Record<string, string[]> = {
     "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=80",
     "https://images.unsplash.com/photo-1600047509358-9dc75507daeb?auto=format&fit=crop&w=900&q=80"
   ],
-  "see-our-homes": [
+  "our-homes": [
     "https://images.unsplash.com/photo-1600573472550-8090b5e0745e?auto=format&fit=crop&w=900&q=80",
     "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80",
     "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=900&q=80",
@@ -74,14 +75,14 @@ const navItems: NavItem[] = [
     subItems: floorPlanSubItems
   },
   {
-    id: "see-our-homes",
-    href: "/floor-plans",
-    label: "See Our Homes",
+    id: "our-homes",
+    href: "/our-homes",
+    label: "Our Homes",
     subItems: [
-      { href: "/floor-plans", label: "Photo Gallery" },
-      { href: "/floor-plans", label: "Videos" },
-      { href: "/floor-plans", label: "Virtual Tours" },
-      { href: "/floor-plans", label: "Visit Our Model Homes" }
+      { href: "/our-homes/photo-gallery", label: "Photo Gallery" },
+      { href: "/our-homes/videos", label: "Videos" },
+      { href: "/our-homes/virtual-tours", label: "Virtual Tours" },
+      { href: "/our-homes/visit-our-model-homes", label: "Visit Our Model Homes" }
     ]
   },
   {
@@ -89,13 +90,13 @@ const navItems: NavItem[] = [
     href: "/build-process",
     label: "Build Process",
     subItems: [
-      { href: "/build-process", label: "Building Green" },
-      { href: "/build-process", label: "Design and Ordering Process" },
-      { href: "/build-process", label: "Modular Construction" },
-      { href: "/build-process", label: "Modular vs. Manufactured" },
-      { href: "/build-process", label: "Precision Building" },
-      { href: "/build-process", label: "Site Built vs. Factory Built" },
-      { href: "/build-process", label: "Warranty" }
+      { href: "/build-process/building-green", label: "Building Green" },
+      { href: "/build-process/design-and-ordering-process", label: "Design and Ordering Process" },
+      { href: "/build-process/modular-construction", label: "Modular Construction" },
+      { href: "/build-process/modular-vs-manufactured", label: "Modular vs. Manufactured" },
+      { href: "/build-process/precision-building", label: "Precision Building" },
+      { href: "/build-process/site-built-vs-factory-built", label: "Site Built vs. Factory Built" },
+      { href: "/build-process/warranty", label: "Warranty" }
     ]
   },
   {
@@ -103,9 +104,9 @@ const navItems: NavItem[] = [
     href: "/about",
     label: "About",
     subItems: [
-      { href: "/about", label: "Our Philosophy" },
-      { href: "/about", label: "Our Team" },
-      { href: "/about", label: "Valoria Homes Reviews" }
+      { href: "/about/our-philosophy", label: "Our Philosophy" },
+      { href: "/about/our-team", label: "Our Team" },
+      { href: "/about/valoria-homes-reviews", label: "Valoria Homes Reviews" }
     ]
   },
   {
@@ -114,8 +115,8 @@ const navItems: NavItem[] = [
     label: "Resources",
     subItems: [
       { href: "/blogs", label: "Blogs" },
-      { href: "/get-started", label: "FAQ" },
-      { href: "/get-started", label: "Mortgage Calculator" }
+      { href: "/get-started/faq", label: "FAQ" },
+      { href: "/get-started/mortgage-calculator", label: "Mortgage Calculator" }
     ]
   },
   {
@@ -126,17 +127,29 @@ const navItems: NavItem[] = [
 ];
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [mobileOpenSubmenus, setMobileOpenSubmenus] = useState<Record<string, boolean>>({});
   const [suppressDesktopMegaMenu, setSuppressDesktopMegaMenu] = useState(false);
 
   const itemsById = useMemo(() => Object.fromEntries(navItems.map((item) => [item.id, item])), []);
 
+  useEffect(() => {
+    setMobileNavOpen(false);
+    setMobileOpenSubmenus({});
+    setSuppressDesktopMegaMenu(true);
+  }, [pathname]);
+
   const toggleMobileSubmenu = (id: string) => {
     setMobileOpenSubmenus((prev) => ({
       ...prev,
       [id]: !prev[id]
     }));
+  };
+
+  const handleNavLinkClick = () => {
+    setSuppressDesktopMegaMenu(true);
+    setMobileNavOpen(false);
   };
 
   return (
@@ -172,6 +185,7 @@ export default function Navbar() {
                     className="header__nav-list-link relative font-body text-[18px] font-[400] text-white transition-colors duration-300 ease-out hover:text-brand-bronze after:absolute after:-bottom-2 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-brand-bronze after:transition-transform after:duration-300 after:ease-out after:content-[''] hover:after:scale-x-100"
                     id={menuItemId}
                     href={item.href}
+                    onClick={handleNavLinkClick}
                     aria-haspopup={hasSubMenu ? "true" : undefined}
                     aria-controls={hasSubMenu ? `desktop-mega-menu-${item.id}` : undefined}
                     aria-expanded={hasSubMenu ? false : undefined}
@@ -194,7 +208,7 @@ export default function Navbar() {
                               key={subItem.label}
                               href={subItem.href}
                               className="group/card block overflow-hidden rounded-lg border border-slate-200 bg-brand-offwhite transition duration-200 hover:border-brand-bronze hover:shadow-md"
-                              onClick={() => setSuppressDesktopMegaMenu(true)}
+                              onClick={handleNavLinkClick}
                             >
                               <div className="relative aspect-[4/3] w-full overflow-hidden">
                                 <Image
@@ -260,7 +274,7 @@ export default function Navbar() {
                         aria-controls={hasSubmenu ? submenuId : undefined}
                         aria-expanded={hasSubmenu ? open : undefined}
                         title={item.label}
-                        onClick={() => setMobileNavOpen(false)}
+                        onClick={handleNavLinkClick}
                       >
                         {item.label}
                       </Link>
@@ -285,7 +299,7 @@ export default function Navbar() {
                               className="header__mobile-dropdown-link block rounded px-3 py-2 text-sm text-white/90 hover:bg-white/10"
                               href={subItem.href}
                               title={subItem.label}
-                              onClick={() => setMobileNavOpen(false)}
+                              onClick={handleNavLinkClick}
                             >
                               {subItem.label}
                             </Link>
@@ -299,7 +313,7 @@ export default function Navbar() {
             </ul>
 
             <div className="header__mobile-cta margin-inline-auto mt-4 text-center">
-              <Link className="btn btn--primary inline-flex rounded-md bg-brand-bronze px-7 py-3 font-semibold text-brand-body" href="/get-started" aria-label="Find Your Builder" onClick={() => setMobileNavOpen(false)}>
+              <Link className="btn btn--primary inline-flex rounded-md bg-brand-bronze px-7 py-3 font-semibold text-brand-body" href="/get-started" aria-label="Find Your Builder" onClick={handleNavLinkClick}>
                 Find Your Builder
               </Link>
             </div>

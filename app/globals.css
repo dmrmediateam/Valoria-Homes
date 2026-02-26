@@ -60,3 +60,28 @@ textarea {
 .fade-in-up {
   animation: fadeInUp 0.6s ease-out both;
 }
+
+/* 5/10 corner blend: balanced rounded + sharp geometry */
+.rounded {
+  border-radius: 8px 2px 8px 2px;
+}
+
+.rounded-sm {
+  border-radius: 6px 2px 6px 2px;
+}
+
+.rounded-md {
+  border-radius: 9px 3px 9px 3px;
+}
+
+.rounded-lg {
+  border-radius: 12px 4px 12px 4px;
+}
+
+.rounded-xl {
+  border-radius: 14px 5px 14px 5px;
+}
+
+.rounded-2xl {
+  border-radius: 16px 6px 16px 6px;
+}
