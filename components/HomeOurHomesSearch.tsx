@@ -70,28 +70,58 @@ export default function HomeOurHomesSearch({ plans, styles }: HomeOurHomesSearch
   const rightPercent = ((sqFtMax - minSqFtValue) / rangeSpan) * 100;
 
   return (
-    <div className="mt-10 grid gap-6 xl:grid-cols-[320px_1fr]">
-      <aside className="h-fit rounded-2xl border border-slate-200 bg-white p-6 shadow-card xl:sticky xl:top-24">
-        <h3 className="font-heading text-3xl text-brand-blue">Filter Results</h3>
-        <p className="mt-3 text-sm text-brand-body">
+    <div className="mt-10 space-y-4">
+      <div className="sticky top-20 z-30 rounded-xl border border-slate-200 bg-white/95 p-4 shadow-card backdrop-blur supports-[backdrop-filter]:bg-white/85 xl:hidden">
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="font-heading text-2xl text-brand-blue">Filter Results</h3>
+          <button
+            type="button"
+            onClick={clearAll}
+            className="border-b border-brand-bronze text-sm font-semibold text-brand-body hover:text-brand-blue"
+          >
+            Reset All
+          </button>
+        </div>
+        <p className="mt-2 text-sm text-brand-body">
           Showing {filteredPlans.length} result{filteredPlans.length === 1 ? "" : "s"} of {plans.length}
         </p>
+        <div className="mt-3">
+          <label htmlFor="home-our-homes-search-mobile" className="sr-only">
+            Search floor plans
+          </label>
+          <input
+            id="home-our-homes-search-mobile"
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search floor plans"
+            className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm text-brand-body outline-none transition focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20"
+          />
+        </div>
+      </div>
 
-        <button
-          type="button"
-          onClick={clearAll}
-          className="mt-4 border-b border-brand-bronze text-sm font-semibold text-brand-body hover:text-brand-blue"
-        >
-          Reset All
-        </button>
-
-        <div className="mt-5 space-y-6">
-          <div>
-            <label htmlFor="home-our-homes-search" className="sr-only">
+      <div className="grid gap-6 xl:grid-cols-[320px_1fr]">
+      <aside className="h-fit rounded-2xl border border-slate-200 bg-white p-6 shadow-card">
+        <div className="hidden xl:block">
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="font-heading text-3xl text-brand-blue">Filter Results</h3>
+            <button
+              type="button"
+              onClick={clearAll}
+              className="border-b border-brand-bronze text-sm font-semibold text-brand-body hover:text-brand-blue"
+            >
+              Reset All
+            </button>
+          </div>
+          <p className="mt-3 text-sm text-brand-body">
+            Showing {filteredPlans.length} result{filteredPlans.length === 1 ? "" : "s"} of {plans.length}
+          </p>
+          <div className="mt-4">
+            <label htmlFor="home-our-homes-search-desktop" className="sr-only">
               Search floor plans
             </label>
             <input
-              id="home-our-homes-search"
+              id="home-our-homes-search-desktop"
               type="search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -99,6 +129,9 @@ export default function HomeOurHomesSearch({ plans, styles }: HomeOurHomesSearch
               className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm text-brand-body outline-none transition focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20"
             />
           </div>
+        </div>
+
+        <div className="mt-5 space-y-6">
 
           <div className="border-t border-slate-200 pt-5">
             <div className="flex items-center justify-between gap-2">
@@ -259,6 +292,7 @@ export default function HomeOurHomesSearch({ plans, styles }: HomeOurHomesSearch
             No homes match your filters yet. Try broadening your criteria.
           </div>
         )}
+      </div>
       </div>
     </div>
   );
