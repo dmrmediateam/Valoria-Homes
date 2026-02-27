@@ -3,9 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import CTASection from "@/components/CTASection";
-import FloorPlanGrid from "@/components/FloorPlanGrid";
 import RelatedContent from "@/components/RelatedContent";
 import SEOWrapper from "@/components/SEOWrapper";
+import StyleFloorPlanSearch from "@/components/StyleFloorPlanSearch";
 import {
   buildFloorPlanHref
 } from "@/lib/data";
@@ -113,7 +113,7 @@ export default async function FloorPlanDynamicPage({ params }: FloorPlanDynamicP
             </div>
 
             <div className="mt-10">
-              <FloorPlanGrid plans={plans} />
+              <StyleFloorPlanSearch plans={plans} styleName={style.title} />
             </div>
 
             <RelatedContent currentSlug={pageSlug} />

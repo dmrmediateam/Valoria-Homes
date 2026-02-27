@@ -43,7 +43,7 @@ const submenuImageSets: Record<string, string[]> = {
     "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&q=80",
     "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=900&q=80"
   ],
-  resources: [
+  "get-started": [
     "https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=900&q=80",
     "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=900&q=80",
     "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=900&q=80",
@@ -110,12 +110,13 @@ const navItems: NavItem[] = [
     ]
   },
   {
-    id: "resources",
+    id: "get-started",
     href: "/get-started",
-    label: "Resources",
+    label: "Get Started",
     subItems: [
-      { href: "/blogs", label: "Blogs" },
-      { href: "/get-started/faq", label: "FAQ" },
+      { href: "/get-started/homebuying-process", label: "Homebuying Process" },
+      { href: "/get-started/faq", label: "FAQs" },
+      { href: "/get-started/terms-and-definitions", label: "Terms & Definitions" },
       { href: "/get-started/mortgage-calculator", label: "Mortgage Calculator" }
     ]
   },
@@ -152,6 +153,14 @@ export default function Navbar() {
     setMobileNavOpen(false);
   };
 
+  const showDesktopMegaMenu = () => {
+    setSuppressDesktopMegaMenu(false);
+  };
+
+  const hideDesktopMegaMenu = () => {
+    setSuppressDesktopMegaMenu(true);
+  };
+
   return (
     <header className="header content-grid relative z-50 border-b border-white/20 bg-brand-blue font-body">
       <div className="header__wrapper content-full mx-auto flex h-[112px] w-full max-w-[1720px] items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -179,7 +188,8 @@ export default function Navbar() {
                 <li
                   key={item.id}
                   className={`header__nav-list-item ${hasSubMenu ? "group static pb-14 -mb-14" : ""}`}
-                  onMouseEnter={hasSubMenu ? () => setSuppressDesktopMegaMenu(false) : undefined}
+                  onMouseEnter={hasSubMenu ? showDesktopMegaMenu : undefined}
+                  onMouseLeave={hasSubMenu ? hideDesktopMegaMenu : undefined}
                 >
                   <Link
                     className="header__nav-list-link relative font-body text-[18px] font-[400] text-white transition-colors duration-300 ease-out hover:text-brand-bronze after:absolute after:-bottom-2 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-brand-bronze after:transition-transform after:duration-300 after:ease-out after:content-[''] hover:after:scale-x-100"

@@ -12,6 +12,7 @@
     "lint": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "seed:blogs": "npx tsx scripts/seed-blogs.ts",
+    "seed:floor-plans": "npx tsx scripts/seed-floor-plans.ts",
     "studio:deploy": "sanity deploy",
     "studio:undeploy": "sanity undeploy"
   },

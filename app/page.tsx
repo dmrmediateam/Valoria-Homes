@@ -3,10 +3,11 @@ import Link from "next/link";
 import BuildProcessSection from "@/components/BuildProcessSection";
 import CTASection from "@/components/CTASection";
 import FloorPlanTypeShowcase from "@/components/FloorPlanTypeShowcase";
+import HomeOurHomesSearch from "@/components/HomeOurHomesSearch";
 import RelatedContent from "@/components/RelatedContent";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import SEOWrapper from "@/components/SEOWrapper";
-import { buildFloorPlanHref, buildSteps } from "@/lib/data";
+import { buildSteps } from "@/lib/data";
 import { getFloorPlansSource, getFloorPlanStylesSource } from "@/lib/floor-plan-source";
 import { metadataFor } from "@/lib/seo";
 
@@ -124,25 +125,7 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <div className="mt-10 grid gap-7 md:grid-cols-2 xl:grid-cols-3">
-            {floorPlans.slice(0, 3).map((plan) => (
-              <article key={plan.id} className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-card fade-in-up">
-                <div className="relative h-56">
-                  <Image src={plan.image} alt={plan.name} fill className="object-cover" sizes="(max-width: 1280px) 50vw, 33vw" />
-                </div>
-                <div className="p-6">
-                  <h3 className="text-3xl font-black text-brand-blue">{plan.name}</h3>
-                  <p className="mt-3 text-base text-brand-body">{plan.beds} Beds • {plan.baths} Baths • {plan.sqFt} Sq Ft</p>
-                  <Link
-                    href={buildFloorPlanHref(plan)}
-                    className="mt-5 inline-block rounded-md bg-brand-bronze px-5 py-2.5 text-sm font-semibold text-brand-body transition hover:brightness-95"
-                  >
-                    View Plan
-                  </Link>
-                </div>
-              </article>
-            ))}
-          </div>
+          <HomeOurHomesSearch plans={floorPlans} styles={floorPlanStyles} />
         </div>
       </section>
 

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CTASection from "@/components/CTASection";
+import FloorPlanSearch from "@/components/FloorPlanSearch";
 import RelatedContent from "@/components/RelatedContent";
 import SEOWrapper from "@/components/SEOWrapper";
 import { getFloorPlansSource, getFloorPlanStylesSource } from "@/lib/floor-plan-source";
@@ -44,6 +45,8 @@ export default async function FloorPlansPage() {
               );
             })}
           </div>
+
+          <FloorPlanSearch plans={floorPlans} styles={floorPlanStyles} />
         </div>
       </section>
 
