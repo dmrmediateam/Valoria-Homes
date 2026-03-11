@@ -10,6 +10,7 @@ export const metadata = metadataFor("/floor-plans");
 
 export default async function FloorPlansPage() {
   const [floorPlanStyles, floorPlans] = await Promise.all([getFloorPlanStylesSource(), getFloorPlansSource()]);
+  const hasLoadedPlans = floorPlanStyles.length > 0 && floorPlans.length > 0;
 
   return (
     <SEOWrapper slug="/floor-plans">
@@ -23,30 +24,38 @@ export default async function FloorPlansPage() {
             </p>
           </div>
 
-          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {floorPlanStyles.map((style) => {
-              const planCount = floorPlans.filter((plan) => plan.styleSlug === style.slug).length;
+          {hasLoadedPlans ? (
+            <>
+              <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                {floorPlanStyles.map((style) => {
+                  const planCount = floorPlans.filter((plan) => plan.styleSlug === style.slug).length;
 
-              return (
-                <article key={style.slug} className="rounded-lg border border-slate-200 bg-white p-6 shadow-card fade-in-up">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-bronze">Floor Plan Style</p>
-                  <h2 className="mt-3 font-heading text-3xl text-brand-blue">{style.title}</h2>
-                  <p className="mt-3 text-sm leading-relaxed text-brand-body">{style.description}</p>
-                  <p className="mt-4 text-sm text-brand-body/70">
-                    {planCount > 0 ? `${planCount} plan${planCount === 1 ? "" : "s"} available` : "Plans coming soon"}
-                  </p>
-                  <Link
-                    href={`/floor-plans/${style.slug}`}
-                    className="mt-6 inline-block rounded-md bg-brand-bronze px-4 py-2 text-sm font-semibold text-white transition hover:brightness-95"
-                  >
-                    Explore {style.title}
-                  </Link>
-                </article>
-              );
-            })}
-          </div>
+                  return (
+                    <article key={style.slug} className="rounded-lg border border-slate-200 bg-white p-6 shadow-card fade-in-up">
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-bronze">Floor Plan Style</p>
+                      <h2 className="mt-3 font-heading text-3xl text-brand-blue">{style.title}</h2>
+                      <p className="mt-3 text-sm leading-relaxed text-brand-body">{style.description}</p>
+                      <p className="mt-4 text-sm text-brand-body/70">
+                        {planCount > 0 ? `${planCount} plan${planCount === 1 ? "" : "s"} available` : "Plans coming soon"}
+                      </p>
+                      <Link
+                        href={`/floor-plans/${style.slug}`}
+                        className="mt-6 inline-block rounded-md bg-brand-bronze px-4 py-2 text-sm font-semibold text-white transition hover:brightness-95"
+                      >
+                        Explore {style.title}
+                      </Link>
+                    </article>
+                  );
+                })}
+              </div>
 
-          <FloorPlanSearch plans={floorPlans} styles={floorPlanStyles} />
+              <FloorPlanSearch plans={floorPlans} styles={floorPlanStyles} />
+            </>
+          ) : (
+            <div className="mt-10 rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-brand-body/80 shadow-card">
+              No floor plans loaded.
+            </div>
+          )}
         </div>
       </section>
 

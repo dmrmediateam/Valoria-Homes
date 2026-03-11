@@ -69,6 +69,14 @@ export default function HomeOurHomesSearch({ plans, styles }: HomeOurHomesSearch
   const leftPercent = ((sqFtMin - minSqFtValue) / rangeSpan) * 100;
   const rightPercent = ((sqFtMax - minSqFtValue) / rangeSpan) * 100;
 
+  if (plans.length === 0) {
+    return (
+      <div className="mt-10 rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-brand-body/80 shadow-card">
+        No floor plans loaded.
+      </div>
+    );
+  }
+
   return (
     <div className="mt-10 space-y-4">
       <div className="sticky top-20 z-30 rounded-xl border border-slate-200 bg-white/95 p-4 shadow-card backdrop-blur supports-[backdrop-filter]:bg-white/85 xl:hidden">

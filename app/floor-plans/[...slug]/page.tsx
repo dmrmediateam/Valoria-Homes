@@ -24,6 +24,8 @@ type FloorPlanDynamicPageProps = {
   }>;
 };
 
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
   const [floorPlanStyles, floorPlans] = await Promise.all([
     getFloorPlanStylesSource(),

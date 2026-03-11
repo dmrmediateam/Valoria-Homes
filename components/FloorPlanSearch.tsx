@@ -14,6 +14,7 @@ type FloorPlanSearchProps = {
 export default function FloorPlanSearch({ plans, styles }: FloorPlanSearchProps) {
   const [query, setQuery] = useState("");
   const [selectedStyle, setSelectedStyle] = useState("all");
+  const hasLoadedPlans = plans.length > 0;
 
   const styleTitleBySlug = useMemo(() => {
     return Object.fromEntries(styles.map((style) => [style.slug, style.title]));
@@ -91,7 +92,7 @@ export default function FloorPlanSearch({ plans, styles }: FloorPlanSearchProps)
 
       {filteredPlans.length === 0 ? (
         <div className="mt-6 rounded-lg border border-dashed border-slate-300 bg-brand-offwhite p-8 text-center text-sm text-brand-body/80">
-          No floor plans match your search yet. Try a broader term or clear the style filter.
+          {hasLoadedPlans ? "No floor plans match your search yet. Try a broader term or clear the style filter." : "No floor plans loaded."}
         </div>
       ) : (
         <div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">

@@ -1,7 +1,7 @@
 import "server-only";
 
-import { floorPlans as fallbackFloorPlans, type FloorPlan } from "@/lib/data";
-import { floorPlanStyles as fallbackFloorPlanStyles, type FloorPlanStyle } from "@/lib/floor-plan-styles";
+import { type FloorPlan } from "@/lib/data";
+import { type FloorPlanStyle } from "@/lib/floor-plan-styles";
 import { client } from "@/lib/sanity";
 import { floorPlansQuery, floorPlanStylesQuery } from "@/lib/sanity.queries";
 
@@ -25,9 +25,21 @@ type SanityFloorPlan = {
   image: string;
 };
 
+export const FLOOR_PLAN_TAGS = {
+  plans: "sanity:floor-plans",
+  styles: "sanity:floor-plan-styles"
+} as const;
+
+export const FLOOR_PLAN_REVALIDATE_TAGS = Object.values(FLOOR_PLAN_TAGS);
+
 async function getSanityFloorPlanStyles(): Promise<FloorPlanStyle[]> {
   try {
-    const styles = await client.fetch<SanityFloorPlanStyle[]>(floorPlanStylesQuery);
+    const styles = await client.fetch<SanityFloorPlanStyle[]>(floorPlanStylesQuery, {}, {
+      useCdn: false,
+      next: {
+        tags: [FLOOR_PLAN_TAGS.styles]
+      }
+    });
     if (!styles || styles.length === 0) {
       return [];
     }
@@ -44,7 +56,12 @@ async function getSanityFloorPlanStyles(): Promise<FloorPlanStyle[]> {
 
 async function getSanityFloorPlans(): Promise<FloorPlan[]> {
   try {
-    const plans = await client.fetch<SanityFloorPlan[]>(floorPlansQuery);
+    const plans = await client.fetch<SanityFloorPlan[]>(floorPlansQuery, {}, {
+      useCdn: false,
+      next: {
+        tags: [FLOOR_PLAN_TAGS.plans, FLOOR_PLAN_TAGS.styles]
+      }
+    });
     if (!plans || plans.length === 0) {
       return [];
     }
@@ -67,13 +84,11 @@ async function getSanityFloorPlans(): Promise<FloorPlan[]> {
 }
 
 export async function getFloorPlanStylesSource(): Promise<FloorPlanStyle[]> {
-  const styles = await getSanityFloorPlanStyles();
-  return styles.length > 0 ? styles : fallbackFloorPlanStyles;
+  return getSanityFloorPlanStyles();
 }
 
 export async function getFloorPlansSource(): Promise<FloorPlan[]> {
-  const plans = await getSanityFloorPlans();
-  return plans.length > 0 ? plans : fallbackFloorPlans;
+  return getSanityFloorPlans();
 }
 
 export async function getFloorPlansByStyleSlugSource(styleSlug: string): Promise<FloorPlan[]> {

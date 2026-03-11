@@ -15,6 +15,7 @@ export const metadata = metadataFor("/");
 
 export default async function HomePage() {
   const [floorPlanStyles, floorPlans] = await Promise.all([getFloorPlanStylesSource(), getFloorPlansSource()]);
+  const hasLoadedPlans = floorPlanStyles.length > 0 && floorPlans.length > 0;
 
   const floorPlanTypeShowcaseItems = floorPlanStyles.map((style) => {
     const plansByStyle = floorPlans.filter((plan) => plan.styleSlug === style.slug);
@@ -109,7 +110,13 @@ export default async function HomePage() {
             </RevealOnScroll>
           </div>
 
-          <FloorPlanTypeShowcase styles={floorPlanTypeShowcaseItems} />
+          {hasLoadedPlans ? (
+            <FloorPlanTypeShowcase styles={floorPlanTypeShowcaseItems} />
+          ) : (
+            <div className="mt-14 rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-brand-body/80 shadow-card">
+              No floor plans loaded.
+            </div>
+          )}
         </div>
       </section>
 
@@ -125,7 +132,13 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <HomeOurHomesSearch plans={floorPlans} styles={floorPlanStyles} />
+          {hasLoadedPlans ? (
+            <HomeOurHomesSearch plans={floorPlans} styles={floorPlanStyles} />
+          ) : (
+            <div className="mt-10 rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-brand-body/80 shadow-card">
+              No floor plans loaded.
+            </div>
+          )}
         </div>
       </section>
 

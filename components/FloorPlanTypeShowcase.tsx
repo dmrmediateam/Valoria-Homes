@@ -36,7 +36,11 @@ export default function FloorPlanTypeShowcase({ styles }: FloorPlanTypeShowcaseP
   );
 
   if (!activeStyle) {
-    return null;
+    return (
+      <div className="mt-14 rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-brand-body/80 shadow-card">
+        No floor plans loaded.
+      </div>
+    );
   }
 
   const planCountLabel =
