@@ -62,6 +62,11 @@ export const floorPlansQuery = `*[_type == "floorPlan" && defined(slug.current) 
   sqFt,
   description,
   "image": mainImage.asset->url,
+  "imageAlt": mainImage.alt,
+  "galleryImages": galleryImages[]{
+    "url": asset->url,
+    alt
+  },
   "pdfUrl": planPdf.asset->url,
   "pdfFilename": planPdf.asset->originalFilename
 }`;

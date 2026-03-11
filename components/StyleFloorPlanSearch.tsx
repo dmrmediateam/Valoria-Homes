@@ -268,9 +268,9 @@ export default function StyleFloorPlanSearch({ plans, styleName }: StyleFloorPla
             No plans match your filters yet.
           </div>
         ) : (
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-8 lg:grid-cols-2">
           {filteredPlans.map((plan) => (
-            <FloorPlanCard key={plan.id} plan={plan} />
+            <FloorPlanCard key={plan.id} plan={plan} variant="wide" fullCardLink />
           ))}
         </div>
         )}

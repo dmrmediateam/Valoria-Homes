@@ -23,6 +23,11 @@ type SanityFloorPlan = {
   sqFt: number;
   description: string;
   image: string;
+  imageAlt: string | null;
+  galleryImages: Array<{
+    url: string | null;
+    alt?: string | null;
+  }> | null;
   pdfUrl: string | null;
   pdfFilename: string | null;
 };
@@ -78,6 +83,14 @@ async function getSanityFloorPlans(): Promise<FloorPlan[]> {
         baths: Number(plan.baths),
         sqFt: Number(plan.sqFt),
         image: plan.image,
+        imageAlt: plan.imageAlt ?? undefined,
+        galleryImages:
+          plan.galleryImages
+            ?.filter((image) => Boolean(image.url))
+            .map((image) => ({
+              url: image.url!,
+              alt: image.alt ?? undefined
+            })) ?? [],
         description: plan.description,
         pdfUrl: plan.pdfUrl ?? undefined,
         pdfFilename: plan.pdfFilename ?? undefined

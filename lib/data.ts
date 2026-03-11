@@ -1,3 +1,8 @@
+export type FloorPlanGalleryImage = {
+  url: string;
+  alt?: string;
+};
+
 export type FloorPlan = {
   id: string;
   name: string;
@@ -6,6 +11,8 @@ export type FloorPlan = {
   baths: number;
   sqFt: number;
   image: string;
+  imageAlt?: string;
+  galleryImages?: FloorPlanGalleryImage[];
   description: string;
   pdfUrl?: string;
   pdfFilename?: string;

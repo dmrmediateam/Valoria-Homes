@@ -59,6 +59,19 @@ export const floorPlan = defineType({
       fields: [{ name: "alt", type: "string", title: "Alt Text" }]
     }),
     defineField({
+      name: "galleryImages",
+      title: "Gallery Images",
+      type: "array",
+      description: "Optional additional photos for the floor plan page carousel.",
+      of: [
+        {
+          type: "image",
+          options: { hotspot: true },
+          fields: [{ name: "alt", type: "string", title: "Alt Text" }]
+        }
+      ]
+    }),
+    defineField({
       name: "planPdf",
       title: "Floor Plan PDF",
       type: "file",

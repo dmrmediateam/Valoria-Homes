@@ -4,27 +4,41 @@ import { buildFloorPlanHref, buildFloorPlanPdfDownloadHref, type FloorPlan } fro
 
 type FloorPlanCardProps = {
   plan: FloorPlan;
+  variant?: "default" | "wide";
+  fullCardLink?: boolean;
 };
 
-export default function FloorPlanCard({ plan }: FloorPlanCardProps) {
+export default function FloorPlanCard({ plan, variant = "default", fullCardLink = false }: FloorPlanCardProps) {
   const pdfDownloadUrl = buildFloorPlanPdfDownloadHref(plan);
+  const isWide = variant === "wide";
+  const planHref = buildFloorPlanHref(plan);
 
   return (
-    <article className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-card fade-in-up">
-      <div className="h-52 w-full overflow-hidden">
+    <article
+      className={`relative overflow-hidden border border-slate-200 bg-white shadow-card fade-in-up ${
+        isWide ? "rounded-2xl" : "rounded-lg"
+      }`}
+    >
+      {fullCardLink && <Link href={planHref} className="absolute inset-0 z-10" aria-label={`Open ${plan.name} floor plan`} />}
+
+      <div className={`w-full overflow-hidden ${isWide ? "h-64 lg:h-72" : "h-52"} ${fullCardLink ? "pointer-events-none" : ""}`}>
         <Image
           src={plan.image}
           alt={plan.name}
           width={720}
           height={480}
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.02]"
           sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
         />
       </div>
-      <div className="p-6">
-        <h3 className="font-heading text-2xl text-brand-blue">{plan.name}</h3>
-        <p className="mt-3 text-sm leading-relaxed text-brand-body">{plan.description}</p>
-        <div className="mt-5 grid grid-cols-3 gap-3 text-sm text-brand-body">
+      <div className={`${isWide ? "p-7 lg:p-8" : "p-6"} ${fullCardLink ? "pointer-events-none relative z-20" : ""}`}>
+        <h3 className={`font-heading text-brand-blue ${isWide ? "text-3xl lg:text-[2rem]" : "text-2xl"}`}>
+          {plan.name}
+        </h3>
+        <p className={`leading-relaxed text-brand-body ${isWide ? "mt-4 text-base" : "mt-3 text-sm"}`}>
+          {plan.description}
+        </p>
+        <div className={`grid grid-cols-3 text-brand-body ${isWide ? "mt-6 gap-4 text-base" : "mt-5 gap-3 text-sm"}`}>
           <p>
             <span className="block text-xs uppercase tracking-widest text-brand-body/60">Beds</span>
             {plan.beds}
@@ -38,10 +52,12 @@ export default function FloorPlanCard({ plan }: FloorPlanCardProps) {
             {plan.sqFt}
           </p>
         </div>
-        <div className="mt-6 flex flex-wrap gap-3">
+        <div className={`flex flex-wrap gap-3 ${isWide ? "mt-7" : "mt-6"} ${fullCardLink ? "pointer-events-auto" : ""}`}>
           <Link
-            href={buildFloorPlanHref(plan)}
-            className="inline-block rounded-md bg-brand-bronze px-4 py-2 text-sm font-semibold text-white transition hover:brightness-95"
+            href={planHref}
+            className={`inline-block rounded-md bg-brand-bronze font-semibold text-white transition hover:brightness-95 ${
+              isWide ? "px-5 py-2.5 text-base" : "px-4 py-2 text-sm"
+            }`}
           >
             View Plan Details
           </Link>
@@ -51,7 +67,9 @@ export default function FloorPlanCard({ plan }: FloorPlanCardProps) {
                 href={plan.pdfUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block rounded-md border border-brand-blue/25 px-4 py-2 text-sm font-semibold text-brand-blue transition hover:bg-brand-blue/5"
+                className={`inline-block rounded-md border border-brand-blue/25 font-semibold text-brand-blue transition hover:bg-brand-blue/5 ${
+                  isWide ? "px-5 py-2.5 text-base" : "px-4 py-2 text-sm"
+                }`}
               >
                 View PDF
               </a>
@@ -59,7 +77,9 @@ export default function FloorPlanCard({ plan }: FloorPlanCardProps) {
                 href={pdfDownloadUrl ?? plan.pdfUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block rounded-md border border-brand-blue/25 px-4 py-2 text-sm font-semibold text-brand-blue transition hover:bg-brand-blue/5"
+                className={`inline-block rounded-md border border-brand-blue/25 font-semibold text-brand-blue transition hover:bg-brand-blue/5 ${
+                  isWide ? "px-5 py-2.5 text-base" : "px-4 py-2 text-sm"
+                }`}
               >
                 Download PDF
               </a>
