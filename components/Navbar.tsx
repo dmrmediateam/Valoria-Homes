@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { floorPlanStyles } from "@/lib/floor-plan-styles";
+import type { FloorPlanStyle } from "@/lib/floor-plan-styles";
 
 type SubItem = {
   href: string;
@@ -59,20 +59,11 @@ const getSubmenuImage = (menuId: string, index: number) => {
   return images[index % images.length];
 };
 
-const floorPlanSubItems: SubItem[] = [
-  { href: "/floor-plans", label: "All Floor Plans" },
-  ...floorPlanStyles.map((style) => ({
-    href: `/floor-plans/${style.slug}`,
-    label: style.title
-  }))
-];
-
-const navItems: NavItem[] = [
+const baseNavItems: NavItem[] = [
   {
     id: "floor-plans",
     href: "/floor-plans",
-    label: "Floor Plans",
-    subItems: floorPlanSubItems
+    label: "Floor Plans"
   },
   {
     id: "our-homes",
@@ -127,13 +118,36 @@ const navItems: NavItem[] = [
   }
 ];
 
-export default function Navbar() {
+type NavbarProps = {
+  floorPlanStyles: FloorPlanStyle[];
+};
+
+export default function Navbar({ floorPlanStyles }: NavbarProps) {
   const pathname = usePathname();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [mobileOpenSubmenus, setMobileOpenSubmenus] = useState<Record<string, boolean>>({});
   const [suppressDesktopMegaMenu, setSuppressDesktopMegaMenu] = useState(false);
 
-  const itemsById = useMemo(() => Object.fromEntries(navItems.map((item) => [item.id, item])), []);
+  const navItems = useMemo<NavItem[]>(() => {
+    const floorPlanSubItems: SubItem[] = [
+      { href: "/floor-plans", label: "All Floor Plans" },
+      ...floorPlanStyles.map((style) => ({
+        href: `/floor-plans/${style.slug}`,
+        label: style.title
+      }))
+    ];
+
+    return baseNavItems.map((item) =>
+      item.id === "floor-plans"
+        ? {
+            ...item,
+            subItems: floorPlanSubItems
+          }
+        : item
+    );
+  }, [floorPlanStyles]);
+
+  const itemsById = useMemo(() => Object.fromEntries(navItems.map((item) => [item.id, item])), [navItems]);
 
   useEffect(() => {
     setMobileNavOpen(false);

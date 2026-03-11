@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import StructuredData from "@/components/StructuredData";
 import { getContentEntry } from "@/lib/content-registry";
+import { getFloorPlanStylesSource } from "@/lib/floor-plan-source";
 import { buildOrganizationSchema, buildWebSiteSchema } from "@/lib/structured-data";
 
 const homeEntry = getContentEntry("/");
@@ -37,14 +38,16 @@ export const metadata: Metadata = {
   }
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const floorPlanStyles = await getFloorPlanStylesSource();
+
   return (
     <html lang="en-US" suppressHydrationWarning>
       <body className="font-body antialiased">
         <StructuredData data={organizationSchema} />
         <StructuredData data={websiteSchema} />
         <div className="flex min-h-screen flex-col">
-          <Navbar />
+          <Navbar floorPlanStyles={floorPlanStyles} />
           <main className="flex-1">{children}</main>
           <Footer />
         </div>
