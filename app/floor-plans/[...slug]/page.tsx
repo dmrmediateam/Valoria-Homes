@@ -145,6 +145,9 @@ export default async function FloorPlanDynamicPage({ params }: FloorPlanDynamicP
 
     const pageSlug = buildFloorPlanHref(plan);
     const floorPlanSchema = buildFloorPlanProductSchema(plan);
+    const pdfDownloadUrl = plan.pdfUrl
+      ? `${plan.pdfUrl}?dl=${encodeURIComponent(plan.pdfFilename ?? `${plan.id}.pdf`)}`
+      : null;
 
     return (
       <SEOWrapper slug={pageSlug} extraSchemas={[floorPlanSchema]}>
@@ -184,6 +187,29 @@ export default async function FloorPlanDynamicPage({ params }: FloorPlanDynamicP
                     <dd className="mt-1 text-lg font-semibold">{plan.sqFt.toLocaleString()} sq ft</dd>
                   </div>
                 </dl>
+                {plan.pdfUrl && (
+                  <div className="mt-6 space-y-3">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-body/60">Floor Plan PDF</p>
+                    <div className="flex flex-wrap gap-3">
+                      <a
+                        href={plan.pdfUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center rounded-md bg-brand-bronze px-4 py-2 text-sm font-semibold text-white transition hover:brightness-95"
+                      >
+                        View PDF
+                      </a>
+                      <a
+                        href={pdfDownloadUrl ?? plan.pdfUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center rounded-md border border-brand-blue/25 px-4 py-2 text-sm font-semibold text-brand-blue transition hover:bg-brand-blue/5"
+                      >
+                        Download PDF
+                      </a>
+                    </div>
+                  </div>
+                )}
                 <Link
                   href={`/floor-plans/${style.slug}`}
                   className="mt-6 inline-block text-sm font-semibold text-brand-blue transition hover:text-brand-bronze"

@@ -23,6 +23,8 @@ type SanityFloorPlan = {
   sqFt: number;
   description: string;
   image: string;
+  pdfUrl: string | null;
+  pdfFilename: string | null;
 };
 
 export const FLOOR_PLAN_TAGS = {
@@ -76,7 +78,9 @@ async function getSanityFloorPlans(): Promise<FloorPlan[]> {
         baths: Number(plan.baths),
         sqFt: Number(plan.sqFt),
         image: plan.image,
-        description: plan.description
+        description: plan.description,
+        pdfUrl: plan.pdfUrl ?? undefined,
+        pdfFilename: plan.pdfFilename ?? undefined
       }));
   } catch {
     return [];

@@ -7,6 +7,8 @@ export type FloorPlan = {
   sqFt: number;
   image: string;
   description: string;
+  pdfUrl?: string;
+  pdfFilename?: string;
 };
 
 export type BuildStep = {

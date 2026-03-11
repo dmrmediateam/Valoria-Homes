@@ -59,6 +59,15 @@ export const floorPlan = defineType({
       fields: [{ name: "alt", type: "string", title: "Alt Text" }]
     }),
     defineField({
+      name: "planPdf",
+      title: "Floor Plan PDF",
+      type: "file",
+      description: "Optional PDF visitors can view or download from the floor plan page.",
+      options: {
+        accept: ".pdf"
+      }
+    }),
+    defineField({
       name: "sortOrder",
       title: "Sort Order",
       type: "number"

@@ -61,5 +61,7 @@ export const floorPlansQuery = `*[_type == "floorPlan" && defined(slug.current) 
   baths,
   sqFt,
   description,
-  "image": mainImage.asset->url
+  "image": mainImage.asset->url,
+  "pdfUrl": planPdf.asset->url,
+  "pdfFilename": planPdf.asset->originalFilename
 }`;
