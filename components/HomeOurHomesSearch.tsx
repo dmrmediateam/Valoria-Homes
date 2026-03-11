@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { buildFloorPlanHref, type FloorPlan } from "@/lib/data";
+import { buildFloorPlanHref, buildFloorPlanPdfDownloadHref, type FloorPlan } from "@/lib/data";
 import type { FloorPlanStyle } from "@/lib/floor-plan-styles";
 
 type HomeOurHomesSearchProps = {
@@ -264,35 +264,63 @@ export default function HomeOurHomesSearch({ plans, styles }: HomeOurHomesSearch
 
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
         {filteredPlans.map((plan) => (
-          <article
-            key={plan.id}
-            className="flex h-[430px] flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-[0_10px_24px_rgba(15,23,42,0.12)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(15,23,42,0.16)] fade-in-up sm:h-[450px]"
-          >
-            <div className="relative h-44 sm:h-48">
-              <Image
-                src={plan.image}
-                alt={plan.name}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, (max-width: 1440px) 50vw, 33vw"
-              />
-            </div>
-            <div className="flex h-full flex-col bg-[#f4f5f7] p-5 sm:p-6">
-              <h3 className="min-h-[3.1rem] overflow-hidden font-heading text-3xl font-black leading-tight text-brand-blue sm:min-h-[3.5rem]">
-                {plan.name}
-              </h3>
-              <p className="mt-3 min-h-[2.2rem] text-xs font-semibold uppercase tracking-[0.18em] text-brand-body sm:text-sm">
-                {plan.beds} Bed{plan.beds === 1 ? "" : "s"} • {formatBathValue(plan.baths)} Bath
-                {plan.baths === 1 ? "" : "s"} • {plan.sqFt.toLocaleString()} Sq. Ft.
-              </p>
-              <Link
-                href={buildFloorPlanHref(plan)}
-                className="mt-auto inline-flex w-full items-center justify-center rounded-full bg-brand-bronze px-5 py-2.5 text-base font-semibold text-brand-body transition hover:brightness-95"
+          (() => {
+            const pdfDownloadUrl = buildFloorPlanPdfDownloadHref(plan);
+
+            return (
+              <article
+                key={plan.id}
+                className="flex h-[430px] flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-[0_10px_24px_rgba(15,23,42,0.12)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(15,23,42,0.16)] fade-in-up sm:h-[450px]"
               >
-                View Floor Plan
-              </Link>
-            </div>
-          </article>
+                <div className="relative h-44 sm:h-48">
+                  <Image
+                    src={plan.image}
+                    alt={plan.name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1440px) 50vw, 33vw"
+                  />
+                </div>
+                <div className="flex h-full flex-col bg-[#f4f5f7] p-5 sm:p-6">
+                  <h3 className="min-h-[3.1rem] overflow-hidden font-heading text-3xl font-black leading-tight text-brand-blue sm:min-h-[3.5rem]">
+                    {plan.name}
+                  </h3>
+                  <p className="mt-3 min-h-[2.2rem] text-xs font-semibold uppercase tracking-[0.18em] text-brand-body sm:text-sm">
+                    {plan.beds} Bed{plan.beds === 1 ? "" : "s"} • {formatBathValue(plan.baths)} Bath
+                    {plan.baths === 1 ? "" : "s"} • {plan.sqFt.toLocaleString()} Sq. Ft.
+                  </p>
+                  <div className="mt-auto flex flex-wrap gap-3">
+                    <Link
+                      href={buildFloorPlanHref(plan)}
+                      className="inline-flex items-center justify-center rounded-full bg-brand-bronze px-5 py-2.5 text-base font-semibold text-brand-body transition hover:brightness-95"
+                    >
+                      View Floor Plan
+                    </Link>
+                    {plan.pdfUrl && (
+                      <>
+                        <a
+                          href={plan.pdfUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center rounded-full border border-brand-blue/25 px-5 py-2.5 text-base font-semibold text-brand-blue transition hover:bg-brand-blue/5"
+                        >
+                          View PDF
+                        </a>
+                        <a
+                          href={pdfDownloadUrl ?? plan.pdfUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center rounded-full border border-brand-blue/25 px-5 py-2.5 text-base font-semibold text-brand-blue transition hover:bg-brand-blue/5"
+                        >
+                          Download PDF
+                        </a>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </article>
+            );
+          })()
         ))}
 
         {filteredPlans.length === 0 && (

@@ -1,12 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
-import { buildFloorPlanHref, type FloorPlan } from "@/lib/data";
+import { buildFloorPlanHref, buildFloorPlanPdfDownloadHref, type FloorPlan } from "@/lib/data";
 
 type FloorPlanCardProps = {
   plan: FloorPlan;
 };
 
 export default function FloorPlanCard({ plan }: FloorPlanCardProps) {
+  const pdfDownloadUrl = buildFloorPlanPdfDownloadHref(plan);
+
   return (
     <article className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-card fade-in-up">
       <div className="h-52 w-full overflow-hidden">
@@ -36,12 +38,34 @@ export default function FloorPlanCard({ plan }: FloorPlanCardProps) {
             {plan.sqFt}
           </p>
         </div>
-        <Link
-          href={buildFloorPlanHref(plan)}
-          className="mt-6 inline-block rounded-md bg-brand-bronze px-4 py-2 text-sm font-semibold text-white transition hover:brightness-95"
-        >
-          View Plan Details
-        </Link>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link
+            href={buildFloorPlanHref(plan)}
+            className="inline-block rounded-md bg-brand-bronze px-4 py-2 text-sm font-semibold text-white transition hover:brightness-95"
+          >
+            View Plan Details
+          </Link>
+          {plan.pdfUrl && (
+            <>
+              <a
+                href={plan.pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block rounded-md border border-brand-blue/25 px-4 py-2 text-sm font-semibold text-brand-blue transition hover:bg-brand-blue/5"
+              >
+                View PDF
+              </a>
+              <a
+                href={pdfDownloadUrl ?? plan.pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block rounded-md border border-brand-blue/25 px-4 py-2 text-sm font-semibold text-brand-blue transition hover:bg-brand-blue/5"
+              >
+                Download PDF
+              </a>
+            </>
+          )}
+        </div>
       </div>
     </article>
   );

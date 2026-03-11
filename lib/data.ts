@@ -163,6 +163,14 @@ export function buildFloorPlanHref(plan: FloorPlan): `/${string}` {
   return `/floor-plans/${plan.styleSlug}/${plan.id}` as `/${string}`;
 }
 
+export function buildFloorPlanPdfDownloadHref(plan: Pick<FloorPlan, "id" | "pdfUrl" | "pdfFilename">): string | null {
+  if (!plan.pdfUrl) {
+    return null;
+  }
+
+  return `${plan.pdfUrl}?dl=${encodeURIComponent(plan.pdfFilename ?? `${plan.id}.pdf`)}`;
+}
+
 export function getFloorPlansByStyleSlug(styleSlug: string): FloorPlan[] {
   return floorPlans.filter((plan) => plan.styleSlug === styleSlug);
 }

@@ -7,6 +7,7 @@ import RelatedContent from "@/components/RelatedContent";
 import SEOWrapper from "@/components/SEOWrapper";
 import StyleFloorPlanSearch from "@/components/StyleFloorPlanSearch";
 import {
+  buildFloorPlanPdfDownloadHref,
   buildFloorPlanHref
 } from "@/lib/data";
 import {
@@ -145,9 +146,7 @@ export default async function FloorPlanDynamicPage({ params }: FloorPlanDynamicP
 
     const pageSlug = buildFloorPlanHref(plan);
     const floorPlanSchema = buildFloorPlanProductSchema(plan);
-    const pdfDownloadUrl = plan.pdfUrl
-      ? `${plan.pdfUrl}?dl=${encodeURIComponent(plan.pdfFilename ?? `${plan.id}.pdf`)}`
-      : null;
+    const pdfDownloadUrl = buildFloorPlanPdfDownloadHref(plan);
 
     return (
       <SEOWrapper slug={pageSlug} extraSchemas={[floorPlanSchema]}>
