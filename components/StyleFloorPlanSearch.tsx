@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import FloorPlanCard from "@/components/FloorPlanCard";
 import PaginationControls from "@/components/PaginationControls";
 import type { FloorPlan } from "@/lib/data";
@@ -17,6 +17,7 @@ function formatBathValue(value: number): string {
 }
 
 export default function StyleFloorPlanSearch({ plans, styleName }: StyleFloorPlanSearchProps) {
+  const sectionRef = useRef<HTMLDivElement>(null);
   const styleIdPrefix = useMemo(() => styleName.toLowerCase().replace(/[^a-z0-9]+/g, "-"), [styleName]);
   const sqFtValues = useMemo(() => plans.map((plan) => plan.sqFt).sort((a, b) => a - b), [plans]);
   const minSqFtValue = 0;
@@ -34,6 +35,11 @@ export default function StyleFloorPlanSearch({ plans, styleName }: StyleFloorPla
   const [selectedBeds, setSelectedBeds] = useState<number[]>([]);
   const [selectedBaths, setSelectedBaths] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const toggleValue = (values: number[], value: number) =>
     values.includes(value) ? values.filter((item) => item !== value) : [...values, value];
@@ -98,7 +104,7 @@ export default function StyleFloorPlanSearch({ plans, styleName }: StyleFloorPla
   const rightPercent = ((sqFtMax - minSqFtValue) / rangeSpan) * 100;
 
   return (
-    <div className="mt-10 space-y-4">
+    <div ref={sectionRef} className="mt-10 scroll-mt-28 space-y-4">
       <div className="sticky top-20 z-30 rounded-xl border border-slate-200 bg-white/95 p-4 shadow-card backdrop-blur supports-[backdrop-filter]:bg-white/85 xl:hidden">
         <div className="flex items-center justify-between gap-3">
           <h3 className="font-heading text-2xl text-brand-blue">Filter Results</h3>
@@ -293,7 +299,7 @@ export default function StyleFloorPlanSearch({ plans, styleName }: StyleFloorPla
                   <FloorPlanCard key={plan.id} plan={plan} fullCardLink />
                 ))}
               </div>
-              <PaginationControls currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+              <PaginationControls currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
             </>
           )}
         </div>

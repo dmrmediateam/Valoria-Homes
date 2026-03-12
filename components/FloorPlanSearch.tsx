@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import PaginationControls from "@/components/PaginationControls";
 import { buildFloorPlanHref, buildFloorPlanPdfDownloadHref, type FloorPlan } from "@/lib/data";
 import type { FloorPlanStyle } from "@/lib/floor-plan-styles";
@@ -15,10 +15,16 @@ type FloorPlanSearchProps = {
 const RESULTS_PER_PAGE = 6;
 
 export default function FloorPlanSearch({ plans, styles }: FloorPlanSearchProps) {
+  const sectionRef = useRef<HTMLElement>(null);
   const [query, setQuery] = useState("");
   const [selectedStyle, setSelectedStyle] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const hasLoadedPlans = plans.length > 0;
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const styleTitleBySlug = useMemo(() => {
     return Object.fromEntries(styles.map((style) => [style.slug, style.title]));
@@ -68,7 +74,7 @@ export default function FloorPlanSearch({ plans, styles }: FloorPlanSearchProps)
   }, [currentPage, totalPages]);
 
   return (
-    <section className="mt-14 rounded-xl border border-slate-200 bg-white p-6 shadow-card sm:p-8">
+    <section ref={sectionRef} className="mt-14 scroll-mt-28 rounded-xl border border-slate-200 bg-white p-6 shadow-card sm:p-8">
       <div className="max-w-3xl">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-bronze">Search</p>
         <h2 className="mt-2 font-heading text-3xl text-brand-blue sm:text-4xl">Find Your Floor Plan</h2>
@@ -187,7 +193,7 @@ export default function FloorPlanSearch({ plans, styles }: FloorPlanSearchProps)
               );
             })}
           </div>
-          <PaginationControls currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+          <PaginationControls currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
         </>
       )}
     </section>
