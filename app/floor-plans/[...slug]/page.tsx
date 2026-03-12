@@ -126,7 +126,7 @@ export default async function FloorPlanDynamicPage({ params }: FloorPlanDynamicP
     return (
       <SEOWrapper slug={pageSlug}>
         <section className="bg-brand-offwhite py-16">
-          <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl fade-in-up">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-bronze">Floor Plan Style</p>
               <h1 className="mt-2 font-heading text-4xl text-brand-blue sm:text-5xl">{style.title} Homes</h1>
@@ -182,7 +182,7 @@ export default async function FloorPlanDynamicPage({ params }: FloorPlanDynamicP
 
     return (
       <SEOWrapper slug={pageSlug} extraSchemas={[floorPlanSchema]}>
-        <section className="relative overflow-hidden bg-[#f4f2ee] py-8 lg:py-10">
+        <section className="relative overflow-hidden bg-[#f4f2ee] py-6 lg:py-8">
           <div className="absolute inset-0 opacity-[0.08]">
             <Image
               src={plan.image}
@@ -196,7 +196,7 @@ export default async function FloorPlanDynamicPage({ params }: FloorPlanDynamicP
           <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(246,247,248,0.97)_0%,rgba(246,247,248,0.94)_42%,rgba(246,247,248,0.78)_65%,rgba(246,247,248,0.92)_100%)]" />
 
           <div className="relative mx-auto w-full max-w-[1720px] px-4 sm:px-6 lg:px-8">
-            <div className="mb-6 flex flex-col gap-3 border-b border-brand-blue/10 pb-5 text-brand-blue lg:flex-row lg:items-center lg:justify-between">
+            <div className="mb-5 flex flex-col gap-3 border-b border-brand-blue/10 pb-4 text-brand-blue lg:flex-row lg:items-center lg:justify-between">
               <Link
                 href={`/floor-plans/${style.slug}`}
                 className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-brand-body/75 transition hover:text-brand-bronze"
@@ -237,36 +237,36 @@ export default async function FloorPlanDynamicPage({ params }: FloorPlanDynamicP
               </div>
             </div>
 
-            <div className="grid items-start gap-10 lg:grid-cols-[0.9fr_1.1fr] xl:gap-14">
-              <div className="relative overflow-hidden rounded-[28px] border border-white/70 bg-white/70 p-7 shadow-[0_24px_70px_rgba(7,38,93,0.08)] backdrop-blur sm:p-8 lg:min-h-[720px] lg:p-10">
+            <div className="grid items-start gap-8 lg:grid-cols-[0.95fr_1.05fr] xl:gap-10">
+              <div className="relative overflow-hidden rounded-[28px] border border-white/70 bg-white/70 p-5 shadow-[0_24px_70px_rgba(7,38,93,0.08)] backdrop-blur sm:p-6 lg:min-h-[620px] lg:p-7">
                 <div className="absolute inset-y-0 right-[-15%] hidden w-[65%] rounded-full bg-brand-bronze/8 blur-3xl lg:block" />
                 <div className="relative">
-                  <p className="text-xs font-semibold uppercase tracking-[0.28em] text-brand-body/55 sm:text-sm">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-brand-body/55 sm:text-xs">
                     {style.title} <span className="mx-2 text-brand-bronze">•</span> {plan.name}
                   </p>
-                  <h1 className="mt-4 font-heading text-5xl leading-[0.95] text-brand-blue sm:text-6xl xl:text-7xl">
+                  <h1 className="mt-3 font-heading text-4xl leading-[0.98] text-brand-blue sm:text-5xl xl:text-6xl">
                     {plan.name}
                   </h1>
 
-                  <div className="mt-8 grid gap-4 rounded-[24px] border border-brand-blue/10 bg-white/72 p-5 sm:grid-cols-3 sm:p-6">
+                  <div className="mt-6 grid gap-3 rounded-[20px] border border-brand-blue/10 bg-white/72 p-4 sm:grid-cols-3 sm:p-5">
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-body/45">Bedrooms</p>
-                      <p className="mt-2 text-3xl text-brand-blue">{plan.beds} Bed</p>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-body/45">Bedrooms</p>
+                      <p className="mt-1.5 text-2xl text-brand-blue sm:text-[1.75rem]">{plan.beds} Bed</p>
                     </div>
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-body/45">Bathrooms</p>
-                      <p className="mt-2 text-3xl text-brand-blue">{plan.baths} Bath</p>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-body/45">Bathrooms</p>
+                      <p className="mt-1.5 text-2xl text-brand-blue sm:text-[1.75rem]">{plan.baths} Bath</p>
                     </div>
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-body/45">Square Feet</p>
-                      <p className="mt-2 text-3xl text-brand-blue">{plan.sqFt.toLocaleString()} Sq. Ft.</p>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-body/45">Square Feet</p>
+                      <p className="mt-1.5 text-2xl text-brand-blue sm:text-[1.75rem]">{plan.sqFt.toLocaleString()} Sq. Ft.</p>
                     </div>
                   </div>
 
-                  <div className="mt-10 flex flex-wrap gap-4">
+                  <div className="mt-8 flex flex-wrap gap-3">
                     <Link
                       href="/contact"
-                      className="inline-flex items-center justify-center rounded-full bg-brand-bronze px-7 py-3.5 text-base font-semibold text-white transition hover:brightness-95"
+                      className="inline-flex items-center justify-center rounded-full bg-brand-bronze px-6 py-3 text-sm font-semibold text-white transition hover:brightness-95 sm:text-base"
                     >
                       Get Your Free Quote
                     </Link>
@@ -275,7 +275,7 @@ export default async function FloorPlanDynamicPage({ params }: FloorPlanDynamicP
                         href={pdfDownloadUrl ?? plan.pdfUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-3 rounded-full border border-brand-bronze/55 bg-white px-7 py-3.5 text-base font-semibold text-brand-blue transition hover:border-brand-bronze hover:bg-brand-offwhite"
+                        className="inline-flex items-center gap-2.5 rounded-full border border-brand-bronze/55 bg-white px-6 py-3 text-sm font-semibold text-brand-blue transition hover:border-brand-bronze hover:bg-brand-offwhite sm:text-base"
                       >
                         Download PDF
                         <PdfIcon />
@@ -284,45 +284,45 @@ export default async function FloorPlanDynamicPage({ params }: FloorPlanDynamicP
                   </div>
 
                   {plan.pdfUrl ? (
-                    <div className="mt-4">
+                    <div className="mt-3">
                       <a
                         href={plan.pdfUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm font-semibold uppercase tracking-[0.18em] text-brand-blue/80 underline-offset-4 transition hover:text-brand-bronze hover:underline"
+                        className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-blue/80 underline-offset-4 transition hover:text-brand-bronze hover:underline sm:text-sm"
                       >
                         View PDF in new tab
                       </a>
                     </div>
                   ) : null}
 
-                  <p className="mt-8 max-w-xl text-base leading-relaxed text-brand-body/78 sm:text-lg">
+                  <p className="mt-6 max-w-xl text-sm leading-relaxed text-brand-body/78 sm:text-base">
                     {plan.description}
                   </p>
 
-                  <div className="mt-10 grid gap-4 border-t border-brand-blue/10 pt-8 sm:grid-cols-3">
-                    <div className="rounded-2xl bg-white/70 p-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-body/45">Home Style</p>
-                      <p className="mt-2 text-2xl text-brand-blue">{style.title}</p>
+                  <div className="mt-8 grid gap-3 border-t border-brand-blue/10 pt-6 sm:grid-cols-3">
+                    <div className="rounded-2xl bg-white/70 p-3.5">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-body/45">Home Style</p>
+                      <p className="mt-1.5 text-xl text-brand-blue sm:text-2xl">{style.title}</p>
                     </div>
-                    <div className="rounded-2xl bg-white/70 p-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-body/45">Plan Code</p>
-                      <p className="mt-2 text-2xl text-brand-blue">{plan.id}</p>
+                    <div className="rounded-2xl bg-white/70 p-3.5">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-body/45">Plan Code</p>
+                      <p className="mt-1.5 text-xl text-brand-blue sm:text-2xl">{plan.id}</p>
                     </div>
-                    <div className="rounded-2xl bg-white/70 p-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-body/45">Availability</p>
-                      <p className="mt-2 text-2xl text-brand-blue">Published</p>
+                    <div className="rounded-2xl bg-white/70 p-3.5">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-body/45">Availability</p>
+                      <p className="mt-1.5 text-xl text-brand-blue sm:text-2xl">Published</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <FloorPlanImageCarousel images={carouselImages} title={plan.name} />
               </div>
             </div>
 
-            <div className="mt-12">
+            <div className="mt-10">
               <RelatedContent currentSlug={pageSlug} />
             </div>
           </div>
