@@ -51,7 +51,17 @@ const submenuImageSets: Record<string, string[]> = {
   ]
 };
 
-const getSubmenuImage = (menuId: string, index: number) => {
+const getSubmenuImage = (
+  menuId: string,
+  index: number,
+  href: string,
+  submenuImageOverrides?: Record<string, string>
+) => {
+  const overrideImage = submenuImageOverrides?.[href];
+  if (overrideImage) {
+    return overrideImage;
+  }
+
   const images = submenuImageSets[menuId];
   if (!images?.length) {
     return "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=900&q=80";
@@ -120,9 +130,10 @@ const baseNavItems: NavItem[] = [
 
 type NavbarProps = {
   floorPlanStyles: FloorPlanStyle[];
+  submenuImageOverrides?: Record<string, string>;
 };
 
-export default function Navbar({ floorPlanStyles }: NavbarProps) {
+export default function Navbar({ floorPlanStyles, submenuImageOverrides }: NavbarProps) {
   const pathname = usePathname();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [mobileOpenSubmenus, setMobileOpenSubmenus] = useState<Record<string, boolean>>({});
@@ -236,7 +247,7 @@ export default function Navbar({ floorPlanStyles }: NavbarProps) {
                             >
                               <div className="relative aspect-[4/3] w-full overflow-hidden">
                                 <Image
-                                  src={getSubmenuImage(item.id, index)}
+                                  src={getSubmenuImage(item.id, index, subItem.href, submenuImageOverrides)}
                                   alt={`${subItem.label} preview`}
                                   fill
                                   sizes="(min-width: 1280px) 16vw, (min-width: 1024px) 19vw, 26vw"

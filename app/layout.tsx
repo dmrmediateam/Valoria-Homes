@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import StructuredData from "@/components/StructuredData";
 import { getContentEntry } from "@/lib/content-registry";
-import { getFloorPlanStylesSource } from "@/lib/floor-plan-source";
+import { getFloorPlansSource, getFloorPlanStylesSource } from "@/lib/floor-plan-source";
 import { buildOrganizationSchema, buildWebSiteSchema } from "@/lib/structured-data";
 
 const homeEntry = getContentEntry("/");
@@ -39,7 +39,18 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const floorPlanStyles = await getFloorPlanStylesSource();
+  const [floorPlanStyles, floorPlans] = await Promise.all([getFloorPlanStylesSource(), getFloorPlansSource()]);
+  const navbarSubmenuImageOverrides: Record<string, string> = {};
+  const allFloorPlansImage = floorPlans[1]?.image ?? floorPlans[0]?.image;
+  const cornerstonePlan = floorPlans.find((plan) => plan.styleSlug.toLowerCase() === "cornerstone");
+
+  if (allFloorPlansImage) {
+    navbarSubmenuImageOverrides["/floor-plans"] = allFloorPlansImage;
+  }
+
+  if (cornerstonePlan?.image) {
+    navbarSubmenuImageOverrides[`/floor-plans/${cornerstonePlan.styleSlug}`] = cornerstonePlan.image;
+  }
 
   return (
     <html lang="en-US" suppressHydrationWarning>
@@ -47,7 +58,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <StructuredData data={organizationSchema} />
         <StructuredData data={websiteSchema} />
         <div className="flex min-h-screen flex-col">
-          <Navbar floorPlanStyles={floorPlanStyles} />
+          <Navbar floorPlanStyles={floorPlanStyles} submenuImageOverrides={navbarSubmenuImageOverrides} />
           <main className="flex-1">{children}</main>
           <Footer />
         </div>

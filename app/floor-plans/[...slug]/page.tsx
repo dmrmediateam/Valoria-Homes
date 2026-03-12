@@ -4,7 +4,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import CTASection from "@/components/CTASection";
 import FloorPlanImageCarousel from "@/components/FloorPlanImageCarousel";
-import RelatedContent from "@/components/RelatedContent";
 import SEOWrapper from "@/components/SEOWrapper";
 import StyleFloorPlanSearch from "@/components/StyleFloorPlanSearch";
 import {
@@ -140,7 +139,6 @@ export default async function FloorPlanDynamicPage({ params }: FloorPlanDynamicP
               <StyleFloorPlanSearch plans={plans} styleName={style.title} />
             </div>
 
-            <RelatedContent currentSlug={pageSlug} />
           </div>
         </section>
 
@@ -168,13 +166,27 @@ export default async function FloorPlanDynamicPage({ params }: FloorPlanDynamicP
     const pageSlug = buildFloorPlanHref(plan);
     const floorPlanSchema = buildFloorPlanProductSchema(plan);
     const pdfDownloadUrl = buildFloorPlanPdfDownloadHref(plan);
-    const carouselImages = [
+    const carouselItems = [
       {
+        type: "image" as const,
         url: plan.image,
         alt: plan.imageAlt ?? `${plan.name} exterior`
       },
-      ...(plan.galleryImages ?? [])
-    ].filter((image, index, images) => images.findIndex((entry) => entry.url === image.url) === index);
+      ...(plan.galleryImages ?? []).map((image) => ({
+        type: "image" as const,
+        url: image.url,
+        alt: image.alt
+      })),
+      ...(plan.pdfUrl
+        ? [
+            {
+              type: "pdf" as const,
+              url: plan.pdfUrl,
+              alt: `${plan.name} PDF preview`
+            }
+          ]
+        : [])
+    ].filter((item, index, items) => items.findIndex((entry) => entry.type === item.type && entry.url === item.url) === index);
     const stylePlans = await getFloorPlansByStyleSlugSource(style.slug);
     const currentPlanIndex = stylePlans.findIndex((entry) => entry.id === plan.id);
     const previousPlan = currentPlanIndex > 0 ? stylePlans[currentPlanIndex - 1] : null;
@@ -318,12 +330,8 @@ export default async function FloorPlanDynamicPage({ params }: FloorPlanDynamicP
               </div>
 
               <div className="space-y-3">
-                <FloorPlanImageCarousel images={carouselImages} title={plan.name} />
+                <FloorPlanImageCarousel items={carouselItems} title={plan.name} />
               </div>
-            </div>
-
-            <div className="mt-10">
-              <RelatedContent currentSlug={pageSlug} />
             </div>
           </div>
         </section>

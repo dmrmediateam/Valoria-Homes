@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import PaginationControls from "@/components/PaginationControls";
 import { buildFloorPlanHref, buildFloorPlanPdfDownloadHref, type FloorPlan } from "@/lib/data";
 import type { FloorPlanStyle } from "@/lib/floor-plan-styles";
 
@@ -11,9 +12,12 @@ type FloorPlanSearchProps = {
   styles: FloorPlanStyle[];
 };
 
+const RESULTS_PER_PAGE = 6;
+
 export default function FloorPlanSearch({ plans, styles }: FloorPlanSearchProps) {
   const [query, setQuery] = useState("");
   const [selectedStyle, setSelectedStyle] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
   const hasLoadedPlans = plans.length > 0;
 
   const styleTitleBySlug = useMemo(() => {
@@ -46,6 +50,22 @@ export default function FloorPlanSearch({ plans, styles }: FloorPlanSearchProps)
       return searchableText.includes(normalizedQuery);
     });
   }, [plans, query, selectedStyle, styleTitleBySlug]);
+
+  const totalPages = Math.max(Math.ceil(filteredPlans.length / RESULTS_PER_PAGE), 1);
+  const paginatedPlans = useMemo(() => {
+    const startIndex = (currentPage - 1) * RESULTS_PER_PAGE;
+    return filteredPlans.slice(startIndex, startIndex + RESULTS_PER_PAGE);
+  }, [currentPage, filteredPlans]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [query, selectedStyle]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   return (
     <section className="mt-14 rounded-xl border border-slate-200 bg-white p-6 shadow-card sm:p-8">
@@ -95,9 +115,9 @@ export default function FloorPlanSearch({ plans, styles }: FloorPlanSearchProps)
           {hasLoadedPlans ? "No floor plans match your search yet. Try a broader term or clear the style filter." : "No floor plans loaded."}
         </div>
       ) : (
-        <div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {filteredPlans.map((plan) => (
-            (() => {
+        <>
+          <div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {paginatedPlans.map((plan) => {
               const pdfDownloadUrl = buildFloorPlanPdfDownloadHref(plan);
 
               return (
@@ -165,9 +185,10 @@ export default function FloorPlanSearch({ plans, styles }: FloorPlanSearchProps)
                   </div>
                 </article>
               );
-            })()
-          ))}
-        </div>
+            })}
+          </div>
+          <PaginationControls currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+        </>
       )}
     </section>
   );

@@ -1,6 +1,5 @@
 import CTASection from "@/components/CTASection";
 import FAQSection from "@/components/FAQSection";
-import RelatedContent from "@/components/RelatedContent";
 import SEOWrapper from "@/components/SEOWrapper";
 import { faqs } from "@/lib/data";
 import { metadataFor } from "@/lib/seo";
@@ -57,12 +56,6 @@ export default function GetStartedPage() {
       </section>
 
       <FAQSection items={faqs} />
-      <section className="bg-brand-offwhite pb-6">
-        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-          <RelatedContent currentSlug="/get-started" />
-        </div>
-      </section>
-
       <CTASection
         title="Questions About Your First Step?"
         description="Talk with our team and we will help you map out the right starting point based on your property, priorities, and timeline."

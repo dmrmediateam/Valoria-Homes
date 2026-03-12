@@ -4,7 +4,6 @@ import BuildProcessSection from "@/components/BuildProcessSection";
 import CTASection from "@/components/CTASection";
 import FloorPlanTypeShowcase from "@/components/FloorPlanTypeShowcase";
 import HomeOurHomesSearch from "@/components/HomeOurHomesSearch";
-import RelatedContent from "@/components/RelatedContent";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import SEOWrapper from "@/components/SEOWrapper";
 import { buildSteps } from "@/lib/data";
@@ -143,12 +142,6 @@ export default async function HomePage() {
       </section>
 
       <BuildProcessSection steps={buildSteps} />
-      <section className="bg-brand-offwhite pb-6">
-        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-          <RelatedContent currentSlug="/" />
-        </div>
-      </section>
-
       <CTASection
         title="Ready to Build with Valoria?"
         description="Talk with our team, compare plans, and take the next step with confidence."

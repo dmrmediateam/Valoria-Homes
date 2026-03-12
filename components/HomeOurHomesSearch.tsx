@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import PaginationControls from "@/components/PaginationControls";
 import { buildFloorPlanHref, buildFloorPlanPdfDownloadHref, type FloorPlan } from "@/lib/data";
 import type { FloorPlanStyle } from "@/lib/floor-plan-styles";
 
@@ -10,6 +11,8 @@ type HomeOurHomesSearchProps = {
   plans: FloorPlan[];
   styles: FloorPlanStyle[];
 };
+
+const RESULTS_PER_PAGE = 6;
 
 function formatBathValue(value: number): string {
   return Number.isInteger(value) ? `${value}` : `${value}`;
@@ -35,6 +38,7 @@ export default function HomeOurHomesSearch({ plans, styles }: HomeOurHomesSearch
   const [sqFtMax, setSqFtMax] = useState(maxSqFtValue);
   const [selectedBeds, setSelectedBeds] = useState<number[]>([]);
   const [selectedBaths, setSelectedBaths] = useState<number[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const toggleValue = (values: number[], value: number) => {
     return values.includes(value) ? values.filter((item) => item !== value) : [...values, value];
@@ -64,6 +68,22 @@ export default function HomeOurHomesSearch({ plans, styles }: HomeOurHomesSearch
       return matchesQuery && matchesSqFt && matchesBeds && matchesBaths;
     });
   }, [plans, query, selectedBaths, selectedBeds, sqFtMax, sqFtMin, styleMap]);
+
+  const totalPages = Math.max(Math.ceil(filteredPlans.length / RESULTS_PER_PAGE), 1);
+  const paginatedPlans = useMemo(() => {
+    const startIndex = (currentPage - 1) * RESULTS_PER_PAGE;
+    return filteredPlans.slice(startIndex, startIndex + RESULTS_PER_PAGE);
+  }, [currentPage, filteredPlans]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [query, selectedBaths, selectedBeds, sqFtMax, sqFtMin]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   const rangeSpan = Math.max(maxSqFtValue - minSqFtValue, 1);
   const leftPercent = ((sqFtMin - minSqFtValue) / rangeSpan) * 100;
@@ -261,74 +281,75 @@ export default function HomeOurHomesSearch({ plans, styles }: HomeOurHomesSearch
           </div>
         </aside>
 
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {filteredPlans.map((plan) => (
-            (() => {
-              const pdfDownloadUrl = buildFloorPlanPdfDownloadHref(plan);
-
-              return (
-                <article
-                  key={plan.id}
-                className="flex h-[440px] flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-[0_10px_24px_rgba(15,23,42,0.12)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(15,23,42,0.16)] fade-in-up sm:h-[460px]"
-              >
-                <div className="relative h-40 sm:h-44">
-                  <Image
-                    src={plan.image}
-                    alt={plan.name}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1440px) 50vw, 33vw"
-                    />
-                  </div>
-                  <div className="flex h-full flex-col bg-[#f4f5f7] p-5">
-                    <h3 className="min-h-[2.75rem] overflow-hidden font-heading text-[1.75rem] font-black leading-tight text-brand-blue sm:min-h-[3rem]">
-                      {plan.name}
-                    </h3>
-                  <p className="mt-2 min-h-[2rem] text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-body sm:text-xs">
-                    {plan.beds} Bed{plan.beds === 1 ? "" : "s"} • {formatBathValue(plan.baths)} Bath
-                    {plan.baths === 1 ? "" : "s"} • {plan.sqFt.toLocaleString()} Sq. Ft.
-                  </p>
-                  <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-brand-body/80">
-                    {plan.description}
-                  </p>
-                  <div className="mt-auto flex flex-wrap gap-2.5">
-                    <Link
-                      href={buildFloorPlanHref(plan)}
-                        className="inline-flex items-center justify-center rounded-full bg-brand-bronze px-4 py-2 text-sm font-semibold text-brand-body transition hover:brightness-95"
-                      >
-                        View Floor Plan
-                      </Link>
-                      {plan.pdfUrl && (
-                        <>
-                          <a
-                            href={plan.pdfUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center rounded-full border border-brand-blue/25 px-4 py-2 text-sm font-semibold text-brand-blue transition hover:bg-brand-blue/5"
-                          >
-                            View PDF
-                          </a>
-                          <a
-                            href={pdfDownloadUrl ?? plan.pdfUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center rounded-full border border-brand-blue/25 px-4 py-2 text-sm font-semibold text-brand-blue transition hover:bg-brand-blue/5"
-                          >
-                            Download PDF
-                          </a>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </article>
-              );
-            })()
-          ))}
-
-          {filteredPlans.length === 0 && (
-            <p className="md:col-span-2 xl:col-span-3 py-8 text-center text-base font-semibold text-brand-blue sm:py-12">
+        <div className="min-w-0">
+          {filteredPlans.length === 0 ? (
+            <p className="py-8 text-center text-base font-semibold text-brand-blue sm:py-12">
               No homes match your filters yet. Try broadening your criteria.
             </p>
+          ) : (
+            <>
+              <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                {paginatedPlans.map((plan) => {
+                  const pdfDownloadUrl = buildFloorPlanPdfDownloadHref(plan);
+
+                  return (
+                    <article
+                      key={plan.id}
+                      className="flex h-[440px] flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-[0_10px_24px_rgba(15,23,42,0.12)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(15,23,42,0.16)] fade-in-up sm:h-[460px]"
+                    >
+                      <div className="relative h-40 sm:h-44">
+                        <Image
+                          src={plan.image}
+                          alt={plan.name}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1440px) 50vw, 33vw"
+                        />
+                      </div>
+                      <div className="flex h-full flex-col bg-[#f4f5f7] p-5">
+                        <h3 className="min-h-[2.75rem] overflow-hidden font-heading text-[1.75rem] font-black leading-tight text-brand-blue sm:min-h-[3rem]">
+                          {plan.name}
+                        </h3>
+                        <p className="mt-2 min-h-[2rem] text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-body sm:text-xs">
+                          {plan.beds} Bed{plan.beds === 1 ? "" : "s"} • {formatBathValue(plan.baths)} Bath
+                          {plan.baths === 1 ? "" : "s"} • {plan.sqFt.toLocaleString()} Sq. Ft.
+                        </p>
+                        <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-brand-body/80">{plan.description}</p>
+                        <div className="mt-auto flex flex-wrap gap-2.5">
+                          <Link
+                            href={buildFloorPlanHref(plan)}
+                            className="inline-flex items-center justify-center rounded-full bg-brand-bronze px-4 py-2 text-sm font-semibold text-brand-body transition hover:brightness-95"
+                          >
+                            View Floor Plan
+                          </Link>
+                          {plan.pdfUrl && (
+                            <>
+                              <a
+                                href={plan.pdfUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center rounded-full border border-brand-blue/25 px-4 py-2 text-sm font-semibold text-brand-blue transition hover:bg-brand-blue/5"
+                              >
+                                View PDF
+                              </a>
+                              <a
+                                href={pdfDownloadUrl ?? plan.pdfUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center rounded-full border border-brand-blue/25 px-4 py-2 text-sm font-semibold text-brand-blue transition hover:bg-brand-blue/5"
+                              >
+                                Download PDF
+                              </a>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+              <PaginationControls currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+            </>
           )}
         </div>
       </div>

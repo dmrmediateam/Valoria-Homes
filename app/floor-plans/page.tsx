@@ -1,7 +1,6 @@
 import Link from "next/link";
 import CTASection from "@/components/CTASection";
 import FloorPlanSearch from "@/components/FloorPlanSearch";
-import RelatedContent from "@/components/RelatedContent";
 import SEOWrapper from "@/components/SEOWrapper";
 import { getFloorPlansSource, getFloorPlanStylesSource } from "@/lib/floor-plan-source";
 import { metadataFor } from "@/lib/seo";
@@ -56,12 +55,6 @@ export default async function FloorPlansPage() {
               No floor plans loaded.
             </div>
           )}
-        </div>
-      </section>
-
-      <section className="bg-brand-offwhite pb-6">
-        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-          <RelatedContent currentSlug="/floor-plans" />
         </div>
       </section>
 

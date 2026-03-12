@@ -1,13 +1,16 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import FloorPlanCard from "@/components/FloorPlanCard";
+import PaginationControls from "@/components/PaginationControls";
 import type { FloorPlan } from "@/lib/data";
 
 type StyleFloorPlanSearchProps = {
   plans: FloorPlan[];
   styleName: string;
 };
+
+const RESULTS_PER_PAGE = 6;
 
 function formatBathValue(value: number): string {
   return Number.isInteger(value) ? `${value}` : `${value}`;
@@ -30,6 +33,7 @@ export default function StyleFloorPlanSearch({ plans, styleName }: StyleFloorPla
   const [sqFtMax, setSqFtMax] = useState(maxSqFtValue);
   const [selectedBeds, setSelectedBeds] = useState<number[]>([]);
   const [selectedBaths, setSelectedBaths] = useState<number[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const toggleValue = (values: number[], value: number) =>
     values.includes(value) ? values.filter((item) => item !== value) : [...values, value];
@@ -64,6 +68,22 @@ export default function StyleFloorPlanSearch({ plans, styleName }: StyleFloorPla
       return matchesQuery && matchesSqFt && matchesBeds && matchesBaths;
     });
   }, [plans, query, selectedBaths, selectedBeds, sqFtMax, sqFtMin]);
+
+  const totalPages = Math.max(Math.ceil(filteredPlans.length / RESULTS_PER_PAGE), 1);
+  const paginatedPlans = useMemo(() => {
+    const startIndex = (currentPage - 1) * RESULTS_PER_PAGE;
+    return filteredPlans.slice(startIndex, startIndex + RESULTS_PER_PAGE);
+  }, [currentPage, filteredPlans]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [query, selectedBaths, selectedBeds, sqFtMax, sqFtMin]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   if (plans.length === 0) {
     return (
@@ -267,11 +287,14 @@ export default function StyleFloorPlanSearch({ plans, styleName }: StyleFloorPla
               No plans match your filters yet.
             </p>
           ) : (
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {filteredPlans.map((plan) => (
-                <FloorPlanCard key={plan.id} plan={plan} fullCardLink />
-              ))}
-            </div>
+            <>
+              <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                {paginatedPlans.map((plan) => (
+                  <FloorPlanCard key={plan.id} plan={plan} fullCardLink />
+                ))}
+              </div>
+              <PaginationControls currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+            </>
           )}
         </div>
       </div>

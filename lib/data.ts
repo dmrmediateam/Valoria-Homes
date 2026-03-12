@@ -3,6 +3,18 @@ export type FloorPlanGalleryImage = {
   alt?: string;
 };
 
+export type FloorPlanCarouselItem =
+  | {
+      type: "image";
+      url: string;
+      alt?: string;
+    }
+  | {
+      type: "pdf";
+      url: string;
+      alt?: string;
+    };
+
 export type FloorPlan = {
   id: string;
   name: string;

@@ -1,5 +1,4 @@
 import ContactForm from "@/components/ContactForm";
-import RelatedContent from "@/components/RelatedContent";
 import SEOWrapper from "@/components/SEOWrapper";
 import { metadataFor } from "@/lib/seo";
 import { buildContactPageSchema } from "@/lib/structured-data";
@@ -34,11 +33,6 @@ export default function ContactPage() {
           <div className="fade-in-up">
             <ContactForm />
           </div>
-        </div>
-      </section>
-      <section className="bg-brand-offwhite pb-6">
-        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-          <RelatedContent currentSlug="/contact" />
         </div>
       </section>
     </SEOWrapper>

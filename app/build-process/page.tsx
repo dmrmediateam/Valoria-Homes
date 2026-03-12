@@ -1,6 +1,5 @@
 import CTASection from "@/components/CTASection";
 import BuildProcessSection from "@/components/BuildProcessSection";
-import RelatedContent from "@/components/RelatedContent";
 import SEOWrapper from "@/components/SEOWrapper";
 import { buildSteps } from "@/lib/data";
 import { metadataFor } from "@/lib/seo";
@@ -24,12 +23,6 @@ export default function BuildProcessPage() {
       </section>
 
       <BuildProcessSection steps={buildSteps} />
-      <section className="bg-brand-offwhite pb-6">
-        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-          <RelatedContent currentSlug="/build-process" />
-        </div>
-      </section>
-
       <CTASection
         title="Start Your Build with a Trusted Team"
         description="Schedule your consultation and we will walk through your goals, timeline, and the best next steps for your project."
