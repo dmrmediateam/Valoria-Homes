@@ -54,7 +54,8 @@ async function getSanityFloorPlanStyles(): Promise<FloorPlanStyle[]> {
     return styles.map((style) => ({
       slug: style.slug,
       title: style.title,
-      description: style.description
+      description: style.description,
+      previewImage: style.previewImage ?? undefined
     }));
   } catch {
     return [];

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import CTASection from "@/components/CTASection";
 import FloorPlanSearch from "@/components/FloorPlanSearch";
@@ -28,21 +29,36 @@ export default async function FloorPlansPage() {
               <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
                 {floorPlanStyles.map((style) => {
                   const planCount = floorPlans.filter((plan) => plan.styleSlug === style.slug).length;
+                  const fallbackPlanImage = floorPlans.find((plan) => plan.styleSlug === style.slug)?.image;
+                  const cardImage = style.previewImage ?? fallbackPlanImage;
 
                   return (
-                    <article key={style.slug} className="rounded-lg border border-slate-200 bg-white p-6 shadow-card fade-in-up">
-                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-bronze">Floor Plan Style</p>
-                      <h2 className="mt-3 font-heading text-3xl text-brand-blue">{style.title}</h2>
-                      <p className="mt-3 text-sm leading-relaxed text-brand-body">{style.description}</p>
-                      <p className="mt-4 text-sm text-brand-body/70">
-                        {planCount > 0 ? `${planCount} plan${planCount === 1 ? "" : "s"} available` : "Plans coming soon"}
-                      </p>
-                      <Link
-                        href={`/floor-plans/${style.slug}`}
-                        className="mt-6 inline-block rounded-md bg-brand-bronze px-4 py-2 text-sm font-semibold text-white transition hover:brightness-95"
-                      >
-                        Explore {style.title}
-                      </Link>
+                    <article key={style.slug} className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-card fade-in-up">
+                      {cardImage ? (
+                        <div className="relative aspect-[4/3] w-full overflow-hidden">
+                          <Image
+                            src={cardImage}
+                            alt={`${style.title} preview`}
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                            className="object-cover"
+                          />
+                        </div>
+                      ) : null}
+                      <div className="p-6">
+                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-bronze">Floor Plan Style</p>
+                        <h2 className="mt-3 font-heading text-3xl text-brand-blue">{style.title}</h2>
+                        <p className="mt-3 text-sm leading-relaxed text-brand-body">{style.description}</p>
+                        <p className="mt-4 text-sm text-brand-body/70">
+                          {planCount > 0 ? `${planCount} plan${planCount === 1 ? "" : "s"} available` : "Plans coming soon"}
+                        </p>
+                        <Link
+                          href={`/floor-plans/${style.slug}`}
+                          className="mt-6 inline-block rounded-md bg-brand-bronze px-4 py-2 text-sm font-semibold text-white transition hover:brightness-95"
+                        >
+                          Explore {style.title}
+                        </Link>
+                      </div>
                     </article>
                   );
                 })}

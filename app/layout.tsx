@@ -41,15 +41,19 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const [floorPlanStyles, floorPlans] = await Promise.all([getFloorPlanStylesSource(), getFloorPlansSource()]);
   const navbarSubmenuImageOverrides: Record<string, string> = {};
-  const allFloorPlansImage = floorPlans[1]?.image ?? floorPlans[0]?.image;
-  const cornerstonePlan = floorPlans.find((plan) => plan.styleSlug.toLowerCase() === "cornerstone");
+  const stanwickPlan = floorPlans.find(
+    (plan) => plan.name.toLowerCase() === "stanwick" || plan.id.toLowerCase() === "stanwick"
+  );
+  const allFloorPlansImage = stanwickPlan?.image ?? floorPlans[1]?.image ?? floorPlans[0]?.image;
 
   if (allFloorPlansImage) {
     navbarSubmenuImageOverrides["/floor-plans"] = allFloorPlansImage;
   }
 
-  if (cornerstonePlan?.image) {
-    navbarSubmenuImageOverrides[`/floor-plans/${cornerstonePlan.styleSlug}`] = cornerstonePlan.image;
+  for (const style of floorPlanStyles) {
+    if (style.previewImage) {
+      navbarSubmenuImageOverrides[`/floor-plans/${style.slug}`] = style.previewImage;
+    }
   }
 
   return (

@@ -2,6 +2,7 @@ export type FloorPlanStyle = {
   slug: string;
   title: string;
   description: string;
+  previewImage?: string;
 };
 
 export const floorPlanStyles: FloorPlanStyle[] = [
