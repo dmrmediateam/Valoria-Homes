@@ -1,55 +1,24 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { client } from "@/lib/sanity";
-import { postBySlugQuery, postSlugsQuery } from "@/lib/sanity.queries";
-import type { PortableTextBlock } from "sanity";
 import PortableText from "@/components/PortableText";
 import SEOWrapper from "@/components/SEOWrapper";
+import {
+  getBlogPostBySlugSource,
+  getBlogPostSlugsSource
+} from "@/lib/blog-source";
 import { buildArticleSchema, type JsonLd } from "@/lib/structured-data";
-
-type Post = {
-  _id: string;
-  title: string;
-  slug: string;
-  excerpt: string | null;
-  body: PortableTextBlock[];
-  mainImage: string | null;
-  mainImageAlt: string | null;
-  publishedAt: string;
-  author: { name?: string; image?: unknown } | null;
-  tags: string[] | null;
-  seo: {
-    metaTitle?: string;
-    metaDescription?: string;
-    keywords?: string[];
-    ogTitle?: string;
-    ogDescription?: string;
-    ogImage?: string;
-    canonicalUrl?: string;
-    noIndex?: boolean;
-    noFollow?: boolean;
-  } | null;
-};
 
 export const revalidate = 60;
 
-async function getPost(slug: string) {
-  return client.fetch<Post | null>(postBySlugQuery, { slug });
-}
-
-async function getPostSlugs() {
-  return client.fetch<Array<{ slug: string }>>(postSlugsQuery);
-}
-
 export async function generateStaticParams() {
-  const slugs = await getPostSlugs();
+  const slugs = await getBlogPostSlugsSource();
   return slugs.map(({ slug }) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = await getPost(slug);
+  const post = await getBlogPostBySlugSource(slug);
   if (!post) return { title: "Post Not Found" };
 
   const title = post.seo?.metaTitle ?? post.title;
@@ -74,7 +43,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = await getPost(slug);
+  const post = await getBlogPostBySlugSource(slug);
 
   if (!post) notFound();
 

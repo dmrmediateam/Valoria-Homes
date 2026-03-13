@@ -3,7 +3,12 @@ import "server-only";
 import { type FloorPlan } from "@/lib/data";
 import { type FloorPlanStyle } from "@/lib/floor-plan-styles";
 import { client } from "@/lib/sanity";
-import { floorPlansQuery, floorPlanStylesQuery } from "@/lib/sanity.queries";
+import {
+  floorPlanRouteQuery,
+  floorPlansQuery,
+  floorPlanStyleRouteQuery,
+  floorPlanStylesQuery
+} from "@/lib/sanity.queries";
 
 type SanityFloorPlanStyle = {
   _id: string;
@@ -30,6 +35,22 @@ type SanityFloorPlan = {
   }> | null;
   pdfUrl: string | null;
   pdfFilename: string | null;
+};
+
+type SanityFloorPlanRoute = {
+  id: string;
+  styleSlug: string;
+  _updatedAt: string;
+};
+
+type SanityFloorPlanStyleRoute = {
+  slug: string;
+  _updatedAt: string;
+};
+
+export type FloorPlanRouteEntry = {
+  slug: `/${string}`;
+  updatedAt: string;
 };
 
 export const FLOOR_PLAN_TAGS = {
@@ -117,4 +138,38 @@ export async function getFloorPlansByStyleSlugSource(styleSlug: string): Promise
 export async function getFloorPlanByStyleAndIdSource(styleSlug: string, planId: string): Promise<FloorPlan | undefined> {
   const plans = await getFloorPlansSource();
   return plans.find((plan) => plan.styleSlug === styleSlug && plan.id === planId);
+}
+
+export async function getFloorPlanRouteEntriesSource(): Promise<FloorPlanRouteEntry[]> {
+  const [styleRoutes, planRoutes] = await Promise.all([
+    client
+      .fetch<SanityFloorPlanStyleRoute[]>(floorPlanStyleRouteQuery, {}, {
+        useCdn: false,
+        next: {
+          tags: [FLOOR_PLAN_TAGS.styles]
+        }
+      })
+      .catch(() => []),
+    client
+      .fetch<SanityFloorPlanRoute[]>(floorPlanRouteQuery, {}, {
+        useCdn: false,
+        next: {
+          tags: [FLOOR_PLAN_TAGS.plans, FLOOR_PLAN_TAGS.styles]
+        }
+      })
+      .catch(() => [])
+  ]);
+
+  return [
+    ...(styleRoutes ?? []).map((style) => ({
+      slug: `/floor-plans/${style.slug}` as `/${string}`,
+      updatedAt: style._updatedAt
+    })),
+    ...(planRoutes ?? [])
+      .filter((plan) => Boolean(plan.id && plan.styleSlug))
+      .map((plan) => ({
+        slug: `/floor-plans/${plan.styleSlug}/${plan.id}` as `/${string}`,
+        updatedAt: plan._updatedAt
+      }))
+  ];
 }

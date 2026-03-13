@@ -1,8 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { client } from "@/lib/sanity";
-import { postsQuery } from "@/lib/sanity.queries";
 import SEOWrapper from "@/components/SEOWrapper";
+import { getBlogPostsSource } from "@/lib/blog-source";
 import type { JsonLd } from "@/lib/structured-data";
 
 export const metadata = {
@@ -12,22 +11,8 @@ export const metadata = {
 
 export const revalidate = 60;
 
-async function getPosts() {
-  return client.fetch<Array<{
-    _id: string;
-    title: string;
-    slug: string;
-    excerpt: string | null;
-    mainImage: string | null;
-    mainImageAlt: string | null;
-    publishedAt: string;
-    author: string | null;
-    tags: string[] | null;
-  }>>(postsQuery);
-}
-
 export default async function BlogsPage() {
-  const posts = await getPosts();
+  const posts = await getBlogPostsSource();
 
   const articleListSchema: JsonLd = {
     "@context": "https://schema.org",

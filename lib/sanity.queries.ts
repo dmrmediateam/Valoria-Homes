@@ -44,6 +44,13 @@ export const postBySlugQuery = `*[_type == "post" && slug.current == $slug][0] {
 
 export const postSlugsQuery = `*[_type == "post" && defined(slug.current)]{ "slug": slug.current }`;
 
+export const postSitemapQuery = `*[_type == "post" && defined(slug.current)] | order(publishedAt desc) {
+  "slug": slug.current,
+  publishedAt,
+  _updatedAt,
+  "noIndex": seo.noIndex
+}`;
+
 export const floorPlanStylesQuery = `*[_type == "floorPlanStyle" && defined(slug.current)] | order(coalesce(sortOrder, 9999) asc, title asc) {
   _id,
   title,
@@ -69,4 +76,15 @@ export const floorPlansQuery = `*[_type == "floorPlan" && defined(slug.current) 
   },
   "pdfUrl": planPdf.asset->url,
   "pdfFilename": planPdf.asset->originalFilename
+}`;
+
+export const floorPlanStyleRouteQuery = `*[_type == "floorPlanStyle" && defined(slug.current)] | order(coalesce(sortOrder, 9999) asc, title asc) {
+  "slug": slug.current,
+  _updatedAt
+}`;
+
+export const floorPlanRouteQuery = `*[_type == "floorPlan" && defined(slug.current) && defined(style->slug.current)] | order(coalesce(sortOrder, 9999) asc, name asc) {
+  "id": slug.current,
+  "styleSlug": style->slug.current,
+  _updatedAt
 }`;
